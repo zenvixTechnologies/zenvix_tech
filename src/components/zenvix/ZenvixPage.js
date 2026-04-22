@@ -31,10 +31,10 @@ function SectionFallback({ compact = false }) {
     <div
       aria-hidden="true"
       className={`mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-8 ${
-        compact ? "py-12 sm:py-16" : "py-20 sm:py-24"
+        compact ? "py-10 sm:py-14 lg:py-16" : "py-16 sm:py-20 lg:py-24"
       }`}
     >
-      <div className="glass-card h-28 animate-pulse rounded-3xl sm:h-36" />
+      <div className="glass-card h-24 animate-pulse rounded-[1.5rem] sm:h-28 sm:rounded-[1.75rem] lg:h-36 lg:rounded-3xl" />
     </div>
   );
 }
@@ -42,11 +42,11 @@ function SectionFallback({ compact = false }) {
 export default function ZenvixPage() {
   return (
     <div
-      className="zenvix-theme min-h-screen bg-background font-body text-on-surface selection:bg-primary/30"
+      className="zenvix-theme relative min-h-screen overflow-x-clip bg-background font-body text-on-surface selection:bg-primary/30"
       id="top"
     >
       <TopNav />
-      <main>
+      <main className="relative isolate">
         <HeroSection />
         <ServicesSection />
         <PortfolioSection />
