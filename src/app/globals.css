@@ -3,6 +3,10 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-geist-sans: Arial, Helvetica, sans-serif;
+  --font-geist-mono: "Courier New", Courier, monospace;
+  --font-manrope: "Manrope", Arial, Helvetica, sans-serif;
+  --font-inter: "Inter", Arial, Helvetica, sans-serif;
 }
 
 @theme inline {
@@ -10,6 +14,61 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-headline: var(--font-manrope);
+  --font-body: var(--font-inter);
+  --font-label: var(--font-inter);
+  --color-tertiary-fixed: #ff85e4;
+  --color-error: #ff716c;
+  --color-secondary-fixed: #e7c5ff;
+  --color-surface-container-high: #1c2028;
+  --color-tertiary-container: #ff05e5;
+  --color-on-primary-fixed-variant: #005e64;
+  --color-tertiary: #ff59e3;
+  --color-surface-container-lowest: #000000;
+  --color-secondary: #c47fff;
+  --color-surface-container-low: #10131a;
+  --color-surface-container: #161a21;
+  --color-surface: #0b0e14;
+  --color-on-secondary-fixed: #500086;
+  --color-on-surface: #ecedf6;
+  --color-on-secondary: #340059;
+  --color-on-tertiary-container: #1b0017;
+  --color-surface-variant: #22262f;
+  --color-on-error: #490006;
+  --color-surface-container-highest: #22262f;
+  --color-inverse-primary: #006a71;
+  --color-on-secondary-container: #fff5ff;
+  --color-on-background: #ecedf6;
+  --color-surface-bright: #282c36;
+  --color-surface-tint: #8ff5ff;
+  --color-inverse-surface: #f9f9ff;
+  --color-inverse-on-surface: #52555c;
+  --color-primary-fixed-dim: #00deec;
+  --color-outline: #73757d;
+  --color-tertiary-fixed-dim: #ff68e3;
+  --color-tertiary-dim: #ff59e3;
+  --color-primary-dim: #00deec;
+  --color-on-surface-variant: #a9abb3;
+  --color-on-tertiary-fixed-variant: #6d0061;
+  --color-surface-dim: #0b0e14;
+  --color-on-error-container: #ffa8a3;
+  --color-on-primary-fixed: #003f43;
+  --color-on-tertiary: #42003a;
+  --color-secondary-container: #8c00e5;
+  --color-secondary-fixed-dim: #ddb3ff;
+  --color-error-container: #9f0519;
+  --color-primary-container: #00eefc;
+  --color-on-secondary-fixed-variant: #7900c6;
+  --color-on-tertiary-fixed: #33002d;
+  --color-error-dim: #d7383b;
+  --color-outline-variant: #45484f;
+  --color-primary-fixed: #00eefc;
+  --color-on-primary: #005d63;
+  --color-on-primary-container: #005359;
+  --color-secondary-dim: #a533ff;
+  --color-primary: #8ff5ff;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +82,48 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.glass-card {
+  background: rgba(34, 38, 47, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(69, 72, 79, 0.15);
+}
+
+.aurora-blur {
+  filter: blur(100px);
+  z-index: -1;
+}
+
+.beam {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c47fff, transparent);
+  width: 200px;
+}
+
+.zenvix-theme {
+  --background: #0b0e14;
+  --foreground: #ecedf6;
+}
+
+.hero-code-type {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  border-right: 2px solid #8ff5ff;
+  animation: hero-code-type 3.8s steps(23, end) infinite;
+}
+
+@keyframes hero-code-type {
+  0%,
+  12% {
+    width: 0;
+  }
+  58%,
+  82% {
+    width: 23ch;
+  }
+  100% {
+    width: 0;
+  }
 }
