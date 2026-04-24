@@ -56,13 +56,13 @@ export default function TopNav() {
                 href="#top"
                 onClick={closeMenu}
               >
-                <span className="relative block h-9 w-24 max-w-full sm:h-11 sm:w-32 md:h-12 md:w-36 lg:h-14 lg:w-40">
+                <span className="relative block h-20 w-60 max-w-full">
                   <Image
                     alt="Zenvix logo"
                     className="object-contain drop-shadow-[0_0_18px_rgba(143,245,255,0.16)]"
                     fill
                     priority
-                    sizes="(max-width: 420px) 96px, (max-width: 640px) 112px, (max-width: 1024px) 144px, 160px"
+                    sizes="240px"
                     src="/zenvix/logo.png"
                   />
                 </span>
@@ -170,12 +170,12 @@ export default function TopNav() {
                 isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
               }`}
             >
-              <span className="relative block h-9 w-24 sm:h-11 sm:w-32">
+              <span className="relative block h-20 w-60">
                 <Image
                   alt="Zenvix logo"
                   className="object-contain drop-shadow-[0_0_18px_rgba(143,245,255,0.16)]"
                   fill
-                  sizes="128px"
+                  sizes="240px"
                   src="/zenvix/logo.png"
                 />
               </span>
