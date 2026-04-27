@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 const sizes = {
   nav: "h-12 w-36 md:h-14 md:w-40",
-  footer: "h-40 w-72 md:h-48 md:w-96",
+  footer: "h-24 w-44 md:h-28 md:w-52",
 };
 
 export default function ZenvixLogo({ placement = "nav", className = "" }) {
