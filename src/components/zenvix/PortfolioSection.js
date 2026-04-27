@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { fadeUp, staggerContainer, viewport } from "./motionPresets";
-import { featuredProject } from "./portfolioData";
+import { portfolioProjects } from "./portfolioData";
 
 export default function PortfolioSection() {
   return (
@@ -23,47 +23,53 @@ export default function PortfolioSection() {
         
           <div className="beam" />
         </motion.div>
-        <motion.div variants={fadeUp}>
-          <Link
-            aria-label={`Open details for ${featuredProject.title}`}
-            className="group block"
-            href={`/zenvix/projects/${featuredProject.slug}`}
-          >
-            <motion.article
-              className="glass-card overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.28)]"
-              whileHover={{ y: -10 }}
+        <motion.div
+          className="grid gap-8 lg:grid-cols-2"
+          variants={fadeUp}
+        >
+          {portfolioProjects.map((project) => (
+            <Link
+              aria-label={`Open details for ${project.title}`}
+              className="group block"
+              href={`/zenvix/projects/${project.slug}`}
+              key={project.slug}
             >
-              <div className="border-b border-white/8 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 p-4 sm:p-6">
-                <motion.div
-                  className="relative h-[240px] overflow-hidden rounded-[1.5rem] bg-surface sm:h-[320px] lg:h-[420px]"
-                  transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  whileHover={{ scale: 1.06 }}
-                >
-                  <Image
-                    alt={featuredProject.alt}
-                    className="object-contain object-center"
-                    fill
-                    loading="lazy"
-                    sizes="(max-width: 1024px) 100vw, 80vw"
-                    src={featuredProject.image}
-                  />
-                </motion.div>
-              </div>
-              <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
-                <div>
-                  <p className="mb-2 text-xs font-semibold uppercase tracking-[0.26em] text-primary">
-                    {featuredProject.eyebrow}
-                  </p>
-                  <h3 className="font-headline text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                    {featuredProject.title}
-                  </h3>
+              <motion.article
+                className="glass-card overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.28)]"
+                whileHover={{ y: -10 }}
+              >
+                <div className="border-b border-white/8 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 p-4 sm:p-6">
+                  <motion.div
+                    className="relative h-[240px] overflow-hidden rounded-[1.5rem] bg-surface sm:h-[320px]"
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ scale: 1.06 }}
+                  >
+                    <Image
+                      alt={project.alt}
+                      className="object-cover object-top"
+                      fill
+                      loading="lazy"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
+                      src={project.image}
+                    />
+                  </motion.div>
                 </div>
-                <span className="rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 group-hover:border-primary/40 group-hover:text-primary">
-                  View Details
-                </span>
-              </div>
-            </motion.article>
-          </Link>
+                <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
+                  <div>
+                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.26em] text-primary">
+                      {project.eyebrow}
+                    </p>
+                    <h3 className="font-headline text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+                      {project.title}
+                    </h3>
+                  </div>
+                  <span className="rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 group-hover:border-primary/40 group-hover:text-primary">
+                    View Details
+                  </span>
+                </div>
+              </motion.article>
+            </Link>
+          ))}
         </motion.div>
       </motion.div>
     </section>
