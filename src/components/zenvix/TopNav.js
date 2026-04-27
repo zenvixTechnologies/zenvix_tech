@@ -52,11 +52,11 @@ export default function TopNav() {
             <div className="flex min-w-0 items-center justify-between gap-2 px-2.5 py-2.5 sm:gap-3 sm:px-4 sm:py-3 md:px-5 lg:px-6">
               <a
                 aria-label="Zenvix home"
-                className="flex min-w-0 flex-1 shrink items-center"
+                className="-ml-1 flex min-w-0 shrink items-center justify-start sm:ml-0 lg:flex-1"
                 href="#top"
                 onClick={closeMenu}
               >
-                <span className="relative block h-20 w-60 max-w-full">
+                <span className="relative block h-20 w-20 max-w-full">
                   <Image
                     alt="Zenvix logo"
                     className="object-contain drop-shadow-[0_0_18px_rgba(143,245,255,0.16)]"
