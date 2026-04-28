@@ -116,6 +116,12 @@ const iconPaths = {
       <path d="m13.5 13.5 3.5 5.5" />
     </>
   ),
+  arrow_outward: (
+    <>
+      <path d="M7 17 17 7" />
+      <path d="M9 7h8v8" />
+    </>
+  ),
 };
 
 export default function Icon({ children, className = "" }) {
