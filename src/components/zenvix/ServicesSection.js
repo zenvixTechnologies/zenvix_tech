@@ -8,7 +8,7 @@ const services = [
   {
     title: "Web Development",
     description:
-      "We build high-performance, scalable web applications using the latest technologies like Next.js and React. Our code is as beautiful as our design.",
+      "Crafting lightning-fast, scalable web experiences that combine cutting-edge technology with flawless performance to drive real business growth.",
     icon: "terminal",
     accent: "primary",
     className: "lg:col-span-2",
@@ -19,7 +19,7 @@ const services = [
   {
     title: "UI/UX Design",
     description:
-      "Editorial-style interfaces that tell a story while maintaining peak usability.",
+      "Designing intuitive digital journeys where every detail is thoughtfully shaped to create effortless, engaging, and visually stunning user experiences.",
     icon: "architecture",
     accent: "secondary",
     titleClassName: "text-xl",
@@ -28,7 +28,7 @@ const services = [
   {
     title: "Web Apps",
     description:
-      "Complex dashboards and business tools reimagined with modern UX patterns.",
+      "Building powerful, user-focused web applications that streamline operations, enhance productivity, and deliver seamless real-time interactions.",
     icon: "dashboard_customize",
     accent: "tertiary",
     titleClassName: "text-xl",
@@ -37,7 +37,7 @@ const services = [
   {
     title: "Creative Solutions",
     description:
-      "Branding, identity, and visual strategy for the digital-first era.",
+      "Transforming ideas into visually striking digital experiences that capture attention, tell your brand story, and leave a lasting impact.",
     icon: "auto_awesome",
     accent: "primary",
     className: "lg:col-start-3",

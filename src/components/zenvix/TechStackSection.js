@@ -8,6 +8,10 @@ const technologies = [
   { label: "React", icon: "developer_board", filled: true },
   { label: "Next.js", icon: "deployed_code" },
   { label: "JS / TS", icon: "javascript" },
+  { label: "Node.js", icon: "nodejs" },
+  { label: "Express.js", icon: "expressjs" },
+  { label: "MongoDB", icon: "mongodb" },
+  { label: "PostgreSQL", icon: "postgresql" },
   { label: "REST / GraphQL", icon: "api" },
 ];
 

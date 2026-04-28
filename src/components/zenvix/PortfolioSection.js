@@ -18,7 +18,7 @@ export default function PortfolioSection() {
       >
         <motion.div className="mb-16" variants={fadeUp}>
           <h2 className="mb-4 font-headline text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-            Selected Works
+            Our clients
           </h2>
         
           <div className="beam" />

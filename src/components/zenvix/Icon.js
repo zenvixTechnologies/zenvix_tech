@@ -85,6 +85,37 @@ const iconPaths = {
       <path d="m13 9 3 3-3 3" />
     </>
   ),
+  nodejs: (
+    <>
+      <path d="m12 2 7 4v12l-7 4-7-4V6z" />
+      <path d="M9 9v6" />
+      <path d="m9 9 6 6" />
+      <path d="M15 9v6" />
+    </>
+  ),
+  expressjs: (
+    <>
+      <path d="M4 8h16" />
+      <path d="M4 12h10" />
+      <path d="M4 16h16" />
+      <path d="m14 10 4 2-4 2" />
+    </>
+  ),
+  mongodb: (
+    <>
+      <path d="M12 3c2.5 2.3 4 5.5 4 9.1 0 3.8-1.4 6.9-4 8.9-2.6-2-4-5.1-4-8.9C8 8.5 9.5 5.3 12 3Z" />
+      <path d="M12 6v12" />
+      <path d="M12 10c-.9.8-1.5 1.9-1.5 3.3 0 1.2.5 2.2 1.5 3" />
+    </>
+  ),
+  postgresql: (
+    <>
+      <path d="M8 6.5c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5c0 1.5-.9 2.6-2.2 3.2 1.6.5 2.7 1.8 2.7 3.6 0 2.2-1.9 4-4.5 4H10" />
+      <path d="M8 6.5V20" />
+      <path d="M8 10h4.5" />
+      <path d="m13.5 13.5 3.5 5.5" />
+    </>
+  ),
 };
 
 export default function Icon({ children, className = "" }) {
