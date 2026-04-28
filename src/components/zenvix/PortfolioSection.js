@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import Icon from "./Icon";
 import { fadeUp, staggerContainer, viewport } from "./motionPresets";
 import { portfolioProjects } from "./portfolioData";
 
@@ -63,8 +64,11 @@ export default function PortfolioSection() {
                       {project.title}
                     </h3>
                   </div>
-                  <span className="rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 group-hover:border-primary/40 group-hover:text-primary">
-                    View Details
+                  <span className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 group-hover:border-primary/40 group-hover:text-primary sm:px-4">
+                    <span className="sm:hidden">
+                      <Icon className="text-base">arrow_outward</Icon>
+                    </span>
+                    <span className="hidden sm:inline">View Details</span>
                   </span>
                 </div>
               </motion.article>
