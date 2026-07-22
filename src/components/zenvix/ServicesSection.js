@@ -11,18 +11,27 @@ const services = [
       "Crafting lightning-fast, scalable web experiences that combine cutting-edge technology with flawless performance to drive real business growth.",
     icon: "terminal",
     accent: "primary",
-    className: "lg:col-span-2",
-    titleClassName: "text-3xl",
-    descriptionClassName: "text-lg mb-6",
+    titleClassName: "text-2xl",
+    descriptionClassName: "text-sm mb-4",
     tags: ["Scalable architecture", "SEO Optimized"],
+  },
+  {
+    title: "App Development",
+    description:
+      "Building high-performance, cross-platform mobile applications for iOS and Android with smooth UI, offline support, and native capabilities.",
+    icon: "smartphone",
+    accent: "secondary",
+    titleClassName: "text-2xl",
+    descriptionClassName: "text-sm mb-4",
+    tags: ["iOS & Android", "Flutter & React Native"],
   },
   {
     title: "UI/UX Design",
     description:
       "Designing intuitive digital journeys where every detail is thoughtfully shaped to create effortless, engaging, and visually stunning user experiences.",
     icon: "architecture",
-    accent: "secondary",
-    titleClassName: "text-xl",
+    accent: "tertiary",
+    titleClassName: "text-2xl",
     descriptionClassName: "text-sm",
   },
   {
@@ -30,18 +39,27 @@ const services = [
     description:
       "Building powerful, user-focused web applications that streamline operations, enhance productivity, and deliver seamless real-time interactions.",
     icon: "dashboard_customize",
-    accent: "tertiary",
-    titleClassName: "text-xl",
+    accent: "primary",
+    titleClassName: "text-2xl",
     descriptionClassName: "text-sm",
+  },
+  {
+    title: "Video Editing",
+    description:
+      "Creating high-impact promotional videos, social media reels, and professional video content that engages audiences and elevates your brand.",
+    icon: "video_editing",
+    accent: "secondary",
+    titleClassName: "text-2xl",
+    descriptionClassName: "text-sm mb-4",
+    tags: ["4K Editing", "Motion Graphics"],
   },
   {
     title: "Creative Solutions",
     description:
       "Transforming ideas into visually striking digital experiences that capture attention, tell your brand story, and leave a lasting impact.",
     icon: "auto_awesome",
-    accent: "primary",
-    className: "lg:col-start-3",
-    titleClassName: "text-xl",
+    accent: "tertiary",
+    titleClassName: "text-2xl",
     descriptionClassName: "text-sm",
   },
 ];
@@ -90,7 +108,7 @@ export default function ServicesSection() {
           </p>
         </motion.div>
         <motion.div
-          className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4"
+          className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3"
           variants={staggerContainer}
         >
           {services.map((service) => {
