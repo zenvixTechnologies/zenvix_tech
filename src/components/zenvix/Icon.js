@@ -122,6 +122,59 @@ const iconPaths = {
       <path d="M9 7h8v8" />
     </>
   ),
+  flutter: (
+    <>
+      <path d="M14.5 3 4.5 13l3.5 3.5 10-10z" />
+      <path d="m11.5 16 3 3H18l-3.5-3.5L18 12h-3.5z" />
+    </>
+  ),
+  springboot: (
+    <>
+      <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z" />
+      <path d="M7 15c0-4.5 3.5-8 8-8 0 4.5-3.5 8-8 8z" />
+      <path d="m11 11 3 3" />
+    </>
+  ),
+  java: (
+    <>
+      <path d="M6 14h10a2 2 0 0 1 2 2v1a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-1a2 2 0 0 1 2-2z" />
+      <path d="M18 14h1a2 2 0 0 1 2 2v1a2 2 0 0 1-2 2h-1" />
+      <path d="M9 4c-1 1-1 2 0 3s0 2-1 3" />
+      <path d="M13 4c-1 1-1 2 0 3s0 2-1 3" />
+      <path d="M6 21h12" />
+    </>
+  ),
+  premiere: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <path d="M7 17V8h3.5a2.5 2.5 0 0 1 0 5H7" />
+      <path d="M14 12v5" />
+      <path d="M14 14c.5-.7 1.3-1 2-1" />
+    </>
+  ),
+  smartphone: (
+    <>
+      <rect x="5" y="2" width="14" height="20" rx="3" />
+      <path d="M12 18h.01" strokeWidth="2.5" />
+      <path d="M9 5h6" />
+    </>
+  ),
+  video_editing: (
+    <>
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="M2 8h20" />
+      <path d="M2 16h20" />
+      <path d="M6 4v4" />
+      <path d="M6 16v4" />
+      <path d="M10 4v4" />
+      <path d="M10 16v4" />
+      <path d="M14 4v4" />
+      <path d="M14 16v4" />
+      <path d="M18 4v4" />
+      <path d="M18 16v4" />
+      <path d="m10 10 5 2.5-5 2.5z" fill="currentColor" />
+    </>
+  ),
 };
 
 export default function Icon({ children, className = "" }) {

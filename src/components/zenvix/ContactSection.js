@@ -1,24 +1,22 @@
 "use client";
 
-import emailjs from "@emailjs/browser";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { fadeUp, staggerContainer, viewport } from "./motionPresets";
 
-const EMAILJS_SERVICE_ID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-const EMAILJS_TEMPLATE_ID = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-const EMAILJS_PUBLIC_KEY = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
 const CONTACT_EMAIL = "zenvix2026@gmail.com";
+const WHATSAPP_NUMBER = "916282685392";
+const DISPLAY_PHONE = "+91 6282685392";
 
 const initialFormData = {
   name: "",
   email: "",
+  phone: "",
   message: "",
 };
 
 export default function ContactSection() {
   const [formData, setFormData] = useState(initialFormData);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState({
     type: "idle",
     message: "",
@@ -33,55 +31,20 @@ export default function ContactSection() {
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (
-      !EMAILJS_SERVICE_ID ||
-      !EMAILJS_TEMPLATE_ID ||
-      !EMAILJS_PUBLIC_KEY
-    ) {
-      setSubmitState({
-        type: "error",
-        message:
-          "Email service is not configured yet. Add your EmailJS keys to continue.",
-      });
-      return;
-    }
+    const phoneDetails = formData.phone ? `\n*Phone:* ${formData.phone}` : "";
+    const textParams = `*New Project Inquiry*\n\n*Name:* ${formData.name}\n*Email:* ${formData.email}${phoneDetails}\n\n*Message:*\n${formData.message}`;
 
-    setIsSubmitting(true);
-    setSubmitState({ type: "idle", message: "" });
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(textParams)}`;
 
-    try {
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          message: formData.message,
-          reply_to: formData.email,
-          to_email: CONTACT_EMAIL,
-        },
-        {
-          publicKey: EMAILJS_PUBLIC_KEY,
-        },
-      );
+    window.open(whatsappUrl, "_blank");
 
-      setFormData(initialFormData);
-      setSubmitState({
-        type: "success",
-        message: "Message sent successfully. We'll get back to you soon.",
-      });
-    } catch (error) {
-      setSubmitState({
-        type: "error",
-        message:
-          "Something went wrong while sending your message. Please try again or email us directly.",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    setSubmitState({
+      type: "success",
+      message: "Opening WhatsApp with your filled message...",
+    });
   };
 
   return (
@@ -104,25 +67,40 @@ export default function ContactSection() {
         >
           Let&apos;s Build Something Great
         </motion.h2>
-        <motion.p
-          className="mb-12 text-xl text-on-surface-variant"
+
+        <motion.div
+          className="mb-12 flex flex-wrap items-center justify-center gap-6 text-lg text-on-surface-variant"
           variants={fadeUp}
         >
-          Ready to embark on your digital journey? Drop us a line or email us at{" "}
-          <a
-            className="text-primary transition-colors hover:text-white"
-            href={`mailto:${CONTACT_EMAIL}`}
-          >
-            {CONTACT_EMAIL}
-          </a>
-          .
-        </motion.p>
+          <div className="flex items-center gap-2">
+            <span className="text-white/60">Phone / WhatsApp:</span>
+            <a
+              className="font-bold text-primary transition-colors hover:text-white"
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {DISPLAY_PHONE}
+            </a>
+          </div>
+          <span className="hidden sm:inline text-white/30">•</span>
+          <div className="flex items-center gap-2">
+            <span className="text-white/60">Email:</span>
+            <a
+              className="font-bold text-primary transition-colors hover:text-white"
+              href={`mailto:${CONTACT_EMAIL}`}
+            >
+              {CONTACT_EMAIL}
+            </a>
+          </div>
+        </motion.div>
+
         <motion.form
           onSubmit={handleSubmit}
           className="glass-card space-y-6 rounded-2xl p-8 text-left md:p-12"
           variants={fadeUp}
         >
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
               <label
                 className="text-sm font-bold text-on-surface-variant"
@@ -159,6 +137,23 @@ export default function ContactSection() {
                 value={formData.email}
               />
             </motion.div>
+            <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
+              <label
+                className="text-sm font-bold text-on-surface-variant"
+                htmlFor="contact-phone"
+              >
+                Phone Number
+              </label>
+              <input
+                className="w-full border-b border-outline-variant/30 bg-transparent py-3 text-white transition-colors focus:border-primary focus:outline-none"
+                id="contact-phone"
+                name="phone"
+                onChange={handleChange}
+                placeholder="+91 6282685392"
+                type="tel"
+                value={formData.phone}
+              />
+            </motion.div>
           </div>
           <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
             <label
@@ -179,23 +174,22 @@ export default function ContactSection() {
             />
           </motion.div>
           <motion.button
-            className="mt-4 w-full rounded-xl bg-primary py-4 font-headline font-bold text-on-primary transition-all hover:shadow-[0_10px_40px_rgba(143,245,255,0.3)]"
-            disabled={isSubmitting}
+            className="mt-4 flex w-full items-center justify-center gap-3 rounded-xl bg-primary py-4 font-headline font-bold text-on-primary transition-all hover:shadow-[0_10px_40px_rgba(143,245,255,0.3)]"
             type="submit"
             whileHover={{ y: -3, scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
           >
-            {isSubmitting ? "Sending..." : "Send Message"}
+            <svg
+              className="h-5 w-5 fill-current"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.002 3.661 3.745-.984z" />
+            </svg>
+            Send Message via WhatsApp
           </motion.button>
           {submitState.message && (
-            <p
-              aria-live="polite"
-              className={`text-sm ${
-                submitState.type === "success"
-                  ? "text-primary"
-                  : "text-secondary"
-              }`}
-            >
+            <p aria-live="polite" className="text-sm text-primary">
               {submitState.message}
             </p>
           )}

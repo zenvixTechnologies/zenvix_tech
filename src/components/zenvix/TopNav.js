@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const navItems = ["Services", "Portfolio", "About", "Tech", "Contact"];
+const navItems = ["Services", "Portfolio", "Tech",];
 
 export default function TopNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -98,19 +98,16 @@ export default function TopNav() {
                 >
                   <span className="relative block h-4 w-5">
                     <span
-                      className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-                        isMenuOpen ? "top-[7px] rotate-45" : ""
-                      }`}
+                      className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${isMenuOpen ? "top-[7px] rotate-45" : ""
+                        }`}
                     />
                     <span
-                      className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-                        isMenuOpen ? "opacity-0" : ""
-                      }`}
+                      className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""
+                        }`}
                     />
                     <span
-                      className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${
-                        isMenuOpen ? "top-[7px] -rotate-45" : ""
-                      }`}
+                      className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${isMenuOpen ? "top-[7px] -rotate-45" : ""
+                        }`}
                     />
                   </span>
                 </button>
@@ -122,31 +119,27 @@ export default function TopNav() {
 
       <div
         aria-hidden={!isMenuOpen}
-        className={`fixed inset-0 z-[60] lg:hidden ${
-          isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-[60] lg:hidden ${isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
+          }`}
       >
         <button
           aria-label="Close navigation overlay"
-          className={`absolute inset-0 bg-slate-950/72 backdrop-blur-sm transition-opacity duration-500 ease-out ${
-            isMenuOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-slate-950/72 backdrop-blur-sm transition-opacity duration-500 ease-out ${isMenuOpen ? "opacity-100" : "opacity-0"
+            }`}
           onClick={closeMenu}
           type="button"
         />
 
         <aside
           aria-modal="true"
-          className={`absolute left-0 top-0 flex h-full w-[min(90vw,22rem)] transform-gpu flex-col border-r border-white/10 bg-[linear-gradient(180deg,rgba(5,8,19,0.985),rgba(13,16,34,0.985))] shadow-[18px_0_60px_rgba(0,0,0,0.42)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${
-            isMenuOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`absolute left-0 top-0 flex h-full w-[min(90vw,22rem)] transform-gpu flex-col border-r border-white/10 bg-[linear-gradient(180deg,rgba(5,8,19,0.985),rgba(13,16,34,0.985))] shadow-[18px_0_60px_rgba(0,0,0,0.42)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
           id="mobile-nav-drawer"
           role="dialog"
         >
           <div
-            className={`flex items-center justify-between border-b border-white/8 px-3.5 pb-3.5 pt-[max(0.875rem,env(safe-area-inset-top))] transition-all duration-500 ease-out sm:px-5 sm:pb-5 sm:pt-[max(1rem,env(safe-area-inset-top))] ${
-              isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
-            }`}
+            className={`flex items-center justify-between border-b border-white/8 px-3.5 pb-3.5 pt-[max(0.875rem,env(safe-area-inset-top))] transition-all duration-500 ease-out sm:px-5 sm:pb-5 sm:pt-[max(1rem,env(safe-area-inset-top))] ${isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
+              }`}
           >
             <span className="font-headline text-xs font-bold tracking-[0.28em] text-slate-300 uppercase sm:text-sm">
               Menu
@@ -166,9 +159,8 @@ export default function TopNav() {
 
           <div className="flex-1 overflow-y-auto px-3.5 py-4.5 sm:px-5 sm:py-6">
             <div
-              className={`mb-5 rounded-[1.2rem] border border-white/8 bg-white/[0.03] p-3.5 transition-all duration-500 ease-out sm:mb-6 sm:rounded-[1.35rem] sm:p-4 ${
-                isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
-              }`}
+              className={`mb-5 rounded-[1.2rem] border border-white/8 bg-white/[0.03] p-3.5 transition-all duration-500 ease-out sm:mb-6 sm:rounded-[1.35rem] sm:p-4 ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
+                }`}
             >
               <span className="relative block h-20 w-60">
                 <Image
@@ -188,9 +180,8 @@ export default function TopNav() {
             <div className="space-y-2.5 sm:space-y-3">
               {navItems.map((item, index) => (
                 <a
-                  className={`flex items-center justify-between rounded-[1.15rem] border border-white/8 bg-white/[0.03] px-3.5 py-3.5 font-headline text-[14px] font-bold tracking-tight text-slate-100 transform-gpu transition-[transform,opacity,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/30 hover:bg-primary/10 hover:text-white sm:rounded-2xl sm:px-4 sm:py-4 sm:text-base ${
-                    isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-5 opacity-0"
-                  }`}
+                  className={`flex items-center justify-between rounded-[1.15rem] border border-white/8 bg-white/[0.03] px-3.5 py-3.5 font-headline text-[14px] font-bold tracking-tight text-slate-100 transform-gpu transition-[transform,opacity,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/30 hover:bg-primary/10 hover:text-white sm:rounded-2xl sm:px-4 sm:py-4 sm:text-base ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-5 opacity-0"
+                    }`}
                   href={`#${item.toLowerCase()}`}
                   key={item}
                   onClick={closeMenu}
@@ -204,9 +195,8 @@ export default function TopNav() {
           </div>
 
           <div
-            className={`border-t border-white/8 px-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 transition-all duration-500 ease-out sm:px-5 sm:pb-[max(1rem,env(safe-area-inset-bottom))] sm:pt-5 ${
-              isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-            }`}
+            className={`border-t border-white/8 px-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 transition-all duration-500 ease-out sm:px-5 sm:pb-[max(1rem,env(safe-area-inset-bottom))] sm:pt-5 ${isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
+              }`}
             style={{ transitionDelay: "180ms" }}
           >
             <a

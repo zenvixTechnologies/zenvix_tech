@@ -8,11 +8,15 @@ const technologies = [
   { label: "React", icon: "developer_board", filled: true },
   { label: "Next.js", icon: "deployed_code" },
   { label: "JS / TS", icon: "javascript" },
+  { label: "Flutter", icon: "flutter" },
+  { label: "Java", icon: "java" },
+  { label: "Spring Boot", icon: "springboot" },
   { label: "Node.js", icon: "nodejs" },
   { label: "Express.js", icon: "expressjs" },
   { label: "MongoDB", icon: "mongodb" },
   { label: "PostgreSQL", icon: "postgresql" },
   { label: "REST / GraphQL", icon: "api" },
+  { label: "Premiere Pro", icon: "premiere" },
 ];
 
 export default function TechStackSection() {

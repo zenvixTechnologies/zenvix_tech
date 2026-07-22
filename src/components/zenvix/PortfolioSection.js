@@ -41,13 +41,13 @@ export default function PortfolioSection() {
               >
                 <div className="border-b border-white/8 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 p-4 sm:p-6">
                   <motion.div
-                    className="relative h-[240px] overflow-hidden rounded-[1.5rem] bg-surface sm:h-[320px]"
+                    className="relative aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-surface"
                     transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ scale: 1.06 }}
+                    whileHover={{ scale: 1.04 }}
                   >
                     <Image
                       alt={project.alt}
-                      className="object-cover object-top"
+                      className="object-cover object-top transition-transform duration-500"
                       fill
                       loading="lazy"
                       sizes="(max-width: 1024px) 100vw, 50vw"
