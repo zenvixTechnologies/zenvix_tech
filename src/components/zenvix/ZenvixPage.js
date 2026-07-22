@@ -26,6 +26,8 @@ const Footer = dynamic(() => import("./Footer"), {
   loading: () => <SectionFallback compact />,
 });
 
+const WhatsAppButton = dynamic(() => import("./WhatsAppButton"));
+
 function SectionFallback({ compact = false }) {
   return (
     <div
@@ -54,6 +56,7 @@ export default function ZenvixPage() {
         <ContactSection />
       </main>
       <Footer />
+      <WhatsAppButton />
     </div>
   );
 }
