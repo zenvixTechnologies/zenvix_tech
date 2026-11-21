@@ -2,6 +2,7 @@ import dynamic from "next/dynamic";
 import BrandMarquee from "./BrandMarquee";
 import HeroSection from "./HeroSection";
 import JsonLd from "./JsonLd";
+import MobileShowcase from "./MobileShowcase";
 import { portfolioProjects, portfolioProjectsBySlug } from "./portfolioData";
 import ShowcaseStage from "./ShowcaseStage";
 import { organizationJsonLd } from "./seo";
@@ -79,6 +80,7 @@ export default function ZenvixPage() {
       <main className="relative isolate" id="main">
         <HeroSection />
         <ShowcaseStage shots={showcaseShots} />
+        <MobileShowcase shots={showcaseShots} />
         <BrandMarquee />
         <ServicesSection />
         <PortfolioSection projects={portfolioCards} />

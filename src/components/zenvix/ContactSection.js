@@ -10,6 +10,9 @@ import { ease } from "./motionPresets";
 import { site, whatsappLink } from "./siteConfig";
 
 const CONTACT_EMAIL = site.email;
+
+// Phones: each contact method becomes a tappable tile.
+const contactTile = "max-md:rounded-2xl max-md:border max-md:border-line max-md:bg-white/[0.03] max-md:p-4";
 const WHATSAPP_NUMBER = site.whatsappNumber;
 
 const initialFormData = {
@@ -142,7 +145,7 @@ export default function ContactSection() {
   const visibleError = (name) => (touched[name] ? errors[name] : undefined);
 
   return (
-    <section className="relative overflow-hidden bg-ink py-24 md:py-40" id="contact">
+    <section className="relative overflow-hidden bg-ink py-24 md:py-40" data-fab-hide id="contact">
       <div
         aria-hidden="true"
         className="orb-b pointer-events-none absolute -right-[20%] top-[10%] h-[45vmax] w-[45vmax] rounded-full bg-violet-deep/20 blur-[120px]"
@@ -165,8 +168,8 @@ export default function ContactSection() {
             </span>
           </h2>
 
-          <Reveal className="mt-14 grid gap-8 sm:grid-cols-2 lg:mt-20" stagger>
-            <RevealItem>
+          <Reveal className="mt-14 grid gap-8 sm:grid-cols-2 lg:mt-20 max-md:mt-10 max-md:gap-3" stagger>
+            <RevealItem className={contactTile}>
               <p className="label mb-3 text-muted">Phone</p>
               <ul className="space-y-2">
                 {site.phones.map((phone) => (
@@ -181,7 +184,7 @@ export default function ContactSection() {
                 ))}
               </ul>
             </RevealItem>
-            <RevealItem>
+            <RevealItem className={contactTile}>
               <p className="label mb-3 text-muted">WhatsApp</p>
               <a
                 className="link-line link-line--static font-display text-xl font-semibold md:text-2xl"
@@ -192,7 +195,7 @@ export default function ContactSection() {
                 {site.whatsappDisplay}
               </a>
             </RevealItem>
-            <RevealItem className="sm:col-span-2">
+            <RevealItem className={`sm:col-span-2 ${contactTile}`}>
               <p className="label mb-3 text-muted">Email</p>
               <a
                 className="link-line link-line--static break-all font-display text-xl font-semibold md:text-2xl"
@@ -205,7 +208,7 @@ export default function ContactSection() {
         </div>
 
         <motion.form
-          className="relative rounded-[var(--radius-card)] border border-line bg-white/[0.02] p-6 backdrop-blur-sm sm:p-10 lg:col-span-6 lg:self-end"
+          className="relative rounded-[var(--radius-card)] border border-line bg-white/[0.02] p-6 backdrop-blur-sm sm:p-10 lg:col-span-6 lg:self-end max-md:p-5"
           initial={{ opacity: 0, y: 40 }}
           noValidate
           onSubmit={handleSubmit}
@@ -267,9 +270,9 @@ export default function ContactSection() {
             <p className="max-w-[14rem] text-xs leading-relaxed text-muted">
               Submitting opens WhatsApp with your message ready to send.
             </p>
-            <Magnetic strength={0.2}>
+            <Magnetic className="max-md:w-full" strength={0.2}>
               <button
-                className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden whitespace-nowrap rounded-full bg-fg px-6 py-4 font-display font-bold text-ink sm:w-auto"
+                className="m-press group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden whitespace-nowrap rounded-full bg-fg px-6 py-4 font-display font-bold text-ink sm:w-auto max-md:gap-2 max-md:whitespace-normal max-md:px-5 max-md:text-center max-md:shadow-[0_18px_44px_-18px_rgba(37,211,102,0.6)]"
                 type="submit"
               >
                 <span className="absolute inset-0 translate-y-full rounded-full bg-wa transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-y-0" />

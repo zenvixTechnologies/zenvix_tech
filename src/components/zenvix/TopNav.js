@@ -10,7 +10,7 @@ import {
   useSpring,
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import Icon from "./Icon";
+import Icon, { WhatsAppGlyph } from "./Icon";
 import Magnetic from "./motion/Magnetic";
 import { useIntro } from "./motion/IntroContext";
 import { getLenis, lockScroll } from "./motion/SmoothScroll";
@@ -19,6 +19,17 @@ import { navItems, sectionHref, site, whatsappLink } from "./siteConfig";
 import ZenvixLogo from "./ZenvixLogo";
 
 const menuItems = [...navItems, { label: "Contact", id: "contact" }];
+
+const quickActions = [
+  { label: "WhatsApp", detail: site.whatsappDisplay, href: whatsappLink(), icon: "whatsapp", external: true },
+  { label: "Email", detail: "Write to us", href: `mailto:${site.email}`, icon: "mail" },
+  ...site.phones.map((phone, index) => ({
+    label: index === 0 ? "Call UAE" : "Call India",
+    detail: phone.display,
+    href: `tel:${phone.tel}`,
+    icon: "phone",
+  })),
+];
 
 function RollText({ children }) {
   return (
@@ -266,7 +277,31 @@ export default function TopNav() {
                 initial={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.8, ease, delay: 0.55 }}
               >
-                <div className="space-y-2">
+                {/* Phones: one-tap contact actions */}
+                <div className="grid grid-cols-2 gap-2 md:hidden">
+                  {quickActions.map((action) => (
+                    <a
+                      className="m-press flex min-h-16 items-center gap-3 rounded-2xl border border-line bg-white/[0.03] px-3 py-3"
+                      href={action.href}
+                      key={action.label}
+                      {...(action.external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet to-blue text-white">
+                        {action.icon === "whatsapp" ? (
+                          <WhatsAppGlyph className="h-4 w-4" />
+                        ) : (
+                          <Icon className="text-base" name={action.icon} />
+                        )}
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block font-display text-sm font-bold">{action.label}</span>
+                        <span className="block truncate text-xs text-muted">{action.detail}</span>
+                      </span>
+                    </a>
+                  ))}
+                </div>
+
+                <div className="space-y-2 max-md:hidden">
                   <p className="label text-muted">Get in touch</p>
                   <a className="link-line block text-lg" href={`mailto:${site.email}`}>
                     {site.email}

@@ -42,7 +42,8 @@ export default function ShowcaseStage({ shots }) {
   const innerScale = useTransform(scrollYProgress, mapRange([0, 1], [1.2, 1]));
 
   return (
-    <section aria-label="Selected work showcase" className="relative h-[220vh] md:h-[260vh]" ref={ref}>
+    // Phones get <MobileShowcase> instead (landscape frames, no portrait crop).
+    <section aria-label="Selected work showcase" className="relative h-[220vh] md:h-[260vh] max-md:hidden" ref={ref}>
       <div className="sticky top-0 flex h-[100svh] items-center justify-center overflow-hidden">
         <motion.div
           aria-hidden="true"

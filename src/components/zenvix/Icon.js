@@ -195,6 +195,15 @@ const iconPaths = {
       <path d="M4 12h16" />
     </>
   ),
+  phone: (
+    <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />
+  ),
+  mail: (
+    <>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </>
+  ),
   sparkle: (
     <path d="M12 2c.6 4.8 2.6 7.4 10 10-7.4 2.6-9.4 5.2-10 10-.6-4.8-2.6-7.4-10-10 7.4-2.6 9.4-5.2 10-10Z" fill="currentColor" stroke="none" />
   ),

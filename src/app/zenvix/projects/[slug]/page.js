@@ -85,7 +85,7 @@ export default async function ProjectDetailsPage({ params }) {
 
       <main id="main">
         {/* Hero */}
-        <section className="relative overflow-hidden pt-[calc(var(--header-h)+3rem)] md:pt-[calc(var(--header-h)+5rem)]">
+        <section className="relative overflow-hidden pt-[calc(var(--header-h)+3rem)] md:pt-[calc(var(--header-h)+5rem)]" data-fab-hide>
           <div
             aria-hidden="true"
             className="orb-a pointer-events-none absolute -right-[15%] -top-[20%] h-[50vmax] w-[50vmax] rounded-full bg-violet-deep/20 blur-[120px]"
@@ -161,11 +161,11 @@ export default async function ProjectDetailsPage({ params }) {
 
         {/* Stats */}
         <section aria-label="Key facts" className="shell py-16 md:py-24">
-          <Reveal as="dl" className="grid divide-y divide-line border-y border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0" stagger>
+          <Reveal as="dl" className="grid divide-y divide-line border-y border-line sm:grid-cols-3 sm:divide-x sm:divide-y-0 max-md:grid-cols-3 max-md:divide-x max-md:divide-y-0" stagger>
             {project.stats.map((stat) => (
-              <RevealItem className="flex flex-col-reverse gap-3 px-0 py-8 sm:px-8 sm:first:pl-0" key={stat.label}>
-                <dt className="label text-muted">{stat.label}</dt>
-                <dd className="font-display text-big font-bold">{stat.value}</dd>
+              <RevealItem className="flex flex-col-reverse gap-3 px-0 py-8 sm:px-8 sm:first:pl-0 max-md:gap-2 max-md:px-3 max-md:py-6 max-md:first:pl-0 max-md:last:pr-0" key={stat.label}>
+                <dt className="label text-muted max-md:text-[0.6rem] max-md:tracking-[0.1em]">{stat.label}</dt>
+                <dd className="font-display text-big font-bold max-md:text-[1.3rem] max-md:leading-tight">{stat.value}</dd>
               </RevealItem>
             ))}
           </Reveal>
@@ -179,7 +179,7 @@ export default async function ProjectDetailsPage({ params }) {
             </div>
           </div>
           <div className="md:col-span-8">
-            <Reveal as="p" className="font-display text-[clamp(1.35rem,2.4vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.02em]">
+            <Reveal as="p" className="font-display text-[clamp(1.35rem,2.4vw,2.25rem)] font-medium leading-[1.3] tracking-[-0.02em] max-md:text-[1.2rem] max-md:leading-[1.45]">
               {project.summary}
             </Reveal>
             <Reveal className="mt-10 flex flex-wrap gap-2">
