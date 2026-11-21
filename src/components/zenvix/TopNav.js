@@ -1,214 +1,303 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import Icon from "./Icon";
+import Magnetic from "./motion/Magnetic";
+import { useIntro } from "./motion/IntroContext";
+import { getLenis, lockScroll } from "./motion/SmoothScroll";
+import { ease, easeInOut } from "./motionPresets";
+import { navItems, sectionHref, site, whatsappLink } from "./siteConfig";
+import ZenvixLogo from "./ZenvixLogo";
 
-const navItems = ["Services", "Portfolio", "Tech",];
+const menuItems = [...navItems, { label: "Contact", id: "contact" }];
+
+function RollText({ children }) {
+  return (
+    <span className="roll">
+      <span>{children}</span>
+      <span aria-hidden="true">{children}</span>
+    </span>
+  );
+}
 
 export default function TopNav() {
+  const pathname = usePathname();
+  const isHome = pathname === "/" || pathname === "/zenvix";
+  const { ready } = useIntro();
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [active, setActive] = useState("");
+  const firstLinkRef = useRef(null);
+  const toggleRef = useRef(null);
+
+  const { scrollY, scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.4 });
+
+  useMotionValueEvent(scrollY, "change", (current) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolled(current > 40);
+    setHidden(current > 240 && current > previous + 2);
+    if (current < previous - 2) setHidden(false);
+  });
 
   const closeMenu = () => setIsMenuOpen(false);
 
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+  // Scroll is locked while the menu is open, so jump after it unlocks.
+  const goToSection = (event, id) => {
+    closeMenu();
+    if (!isHome) return;
+    event.preventDefault();
+    setTimeout(() => {
+      const target = document.getElementById(id);
+      if (!target) return;
+      const lenis = getLenis();
+      if (lenis) lenis.scrollTo(target, { duration: 1.4 });
+      else target.scrollIntoView({ behavior: "smooth" });
+      window.history.replaceState(null, "", `#${id}`);
+    }, 60);
+  };
 
+  // Scroll lock + keyboard handling for the full-screen menu
+  useEffect(() => {
+    if (!isMenuOpen) return undefined;
+
+    lockScroll(true);
+    const focusTimer = setTimeout(() => firstLinkRef.current?.focus(), 400);
+    const toggle = toggleRef.current;
+
+    const onKeyDown = (event) => {
+      if (event.key === "Escape") setIsMenuOpen(false);
+    };
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setIsMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("resize", onResize);
     return () => {
-      document.body.style.overflow = "";
+      clearTimeout(focusTimer);
+      lockScroll(false);
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("resize", onResize);
+      toggle?.focus({ preventScroll: true });
     };
   }, [isMenuOpen]);
 
+  // Active section indicator (home only)
   useEffect(() => {
-    if (!isMenuOpen) {
-      return undefined;
-    }
+    if (!isHome) return undefined;
+    const sections = menuItems
+      .map((item) => document.getElementById(item.id))
+      .filter(Boolean);
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, [isHome]);
 
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        closeMenu();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [isMenuOpen]);
+  const homeHref = isHome ? "#top" : "/zenvix";
 
   return (
     <>
-      <nav className="fixed inset-x-0 top-0 z-50 px-2 pt-2.5 sm:px-4 sm:pt-3 md:px-5 lg:px-6">
-        <div className="mx-auto w-full max-w-7xl">
-          <div className="rounded-[1.1rem] border border-white/10 bg-slate-950/78 shadow-[0_18px_60px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:rounded-[1.4rem]">
-            <div className="flex min-w-0 items-center justify-between gap-2 px-2.5 py-2.5 sm:gap-3 sm:px-4 sm:py-3 md:px-5 lg:px-6">
-              <a
-                aria-label="Zenvix home"
-                className="-ml-1 flex min-w-0 shrink items-center justify-start sm:ml-0 lg:flex-1"
-                href="#top"
-                onClick={closeMenu}
+      <motion.header
+        animate={{ y: hidden && !isMenuOpen ? "-110%" : "0%", opacity: ready ? 1 : 0 }}
+        className="fixed inset-x-0 top-0 z-50"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.7, ease }}
+      >
+        <div
+          className={`transition-[background-color,border-color,backdrop-filter] duration-500 ${
+            scrolled || isMenuOpen
+              ? "border-b border-line bg-ink/75 backdrop-blur-xl"
+              : "border-b border-transparent"
+          }`}
+        >
+          <nav
+            aria-label="Primary"
+            className="shell grid h-[var(--header-h)] grid-cols-[1fr_auto] items-center gap-4 lg:grid-cols-[1fr_auto_1fr]"
+          >
+            <Link
+              aria-label="Zenvix home"
+              className="flex w-fit items-center gap-3"
+              href={homeHref}
+              onClick={closeMenu}
+            >
+              <ZenvixLogo placement="nav" priority />
+              <span className="hidden font-display text-[0.95rem] font-bold uppercase tracking-[0.22em] sm:inline">
+                Zenvix
+              </span>
+            </Link>
+
+            <ul className="hidden items-center gap-1 lg:flex">
+              {navItems.map((item) => {
+                const isActive = isHome && active === item.id;
+                return (
+                  <li key={item.id}>
+                    <a
+                      aria-current={isActive ? "true" : undefined}
+                      className={`roll-trigger relative flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-semibold transition-colors duration-300 ${
+                        isActive ? "text-fg" : "text-muted hover:text-fg"
+                      }`}
+                      href={sectionHref(pathname, item.id)}
+                    >
+                      {isActive && (
+                        <motion.span
+                          className="absolute inset-0 -z-10 rounded-full border border-line bg-white/[0.04]"
+                          layoutId="nav-active"
+                          transition={{ type: "spring", stiffness: 380, damping: 34 }}
+                        />
+                      )}
+                      <RollText>{item.label}</RollText>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <div className="flex items-center justify-end gap-2 sm:gap-3">
+              <Magnetic className="hidden sm:inline-flex" strength={0.25}>
+                <a
+                  className="roll-trigger group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-fg px-5 py-3 font-display text-sm font-bold text-ink"
+                  href={sectionHref(pathname, "contact")}
+                >
+                  <span className="absolute inset-0 translate-y-full rounded-full bg-gradient-to-r from-violet to-blue transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0" />
+                  <span className="relative">
+                    <RollText>Let&apos;s Build</RollText>
+                  </span>
+                  <Icon className="relative text-base transition-transform duration-500 group-hover:-rotate-45" name="arrow_right" />
+                </a>
+              </Magnetic>
+
+              <button
+                aria-controls="mobile-menu"
+                aria-expanded={isMenuOpen}
+                aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+                className="relative inline-flex h-12 w-12 items-center justify-center rounded-full border border-line bg-white/[0.04] text-fg transition-colors hover:border-white/30 lg:hidden"
+                onClick={() => setIsMenuOpen((open) => !open)}
+                ref={toggleRef}
+                type="button"
               >
-                <span className="relative block h-20 w-20 max-w-full">
-                  <Image
-                    alt="Zenvix logo"
-                    className="object-contain drop-shadow-[0_0_18px_rgba(143,245,255,0.16)]"
-                    fill
-                    priority
-                    sizes="240px"
-                    src="/zenvix/logo.png"
+                <span className="relative block h-3 w-5">
+                  <span
+                    className={`absolute left-0 h-[1.5px] w-5 bg-current transition-all duration-500 ease-[var(--ease-out-expo)] ${
+                      isMenuOpen ? "top-[5px] rotate-45" : "top-0"
+                    }`}
+                  />
+                  <span
+                    className={`absolute left-0 h-[1.5px] bg-current transition-all duration-500 ease-[var(--ease-out-expo)] ${
+                      isMenuOpen ? "top-[5px] w-5 -rotate-45" : "top-[10px] w-3"
+                    }`}
                   />
                 </span>
-              </a>
-
-              <div className="hidden items-center gap-5 font-headline text-sm font-bold tracking-tight lg:flex xl:gap-8">
-                {navItems.map((item) => (
-                  <a
-                    className="text-slate-400 transition-colors duration-200 hover:text-white"
-                    href={`#${item.toLowerCase()}`}
-                    key={item}
-                  >
-                    {item}
-                  </a>
-                ))}
-              </div>
-
-              <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-3">
-                <a
-                  className="hidden rounded-full bg-primary px-4 py-2.5 font-headline text-sm font-bold tracking-tight text-on-primary shadow-[0_0_20px_rgba(143,245,255,0.22)] transition-all duration-200 hover:scale-[1.02] hover:shadow-[0_0_28px_rgba(143,245,255,0.34)] sm:inline-flex lg:px-6"
-                  href="#contact"
-                >
-                  Let&apos;s Build
-                </a>
-
-                <button
-                  aria-controls="mobile-nav-drawer"
-                  aria-expanded={isMenuOpen}
-                  aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition-colors duration-200 hover:border-primary/40 hover:bg-primary/10 sm:h-11 sm:w-11 lg:hidden"
-                  onClick={() => setIsMenuOpen((open) => !open)}
-                  type="button"
-                >
-                  <span className="relative block h-4 w-5">
-                    <span
-                      className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${isMenuOpen ? "top-[7px] rotate-45" : ""
-                        }`}
-                    />
-                    <span
-                      className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${isMenuOpen ? "opacity-0" : ""
-                        }`}
-                    />
-                    <span
-                      className={`absolute left-0 top-[14px] h-0.5 w-5 rounded-full bg-current transition-all duration-300 ${isMenuOpen ? "top-[7px] -rotate-45" : ""
-                        }`}
-                    />
-                  </span>
-                </button>
-              </div>
+              </button>
             </div>
-          </div>
+          </nav>
+          <motion.div
+            aria-hidden="true"
+            className="h-px origin-left bg-gradient-to-r from-violet to-blue"
+            style={{ scaleX: progress, opacity: scrolled ? 1 : 0 }}
+          />
         </div>
-      </nav>
+      </motion.header>
 
-      <div
-        aria-hidden={!isMenuOpen}
-        className={`fixed inset-0 z-[60] lg:hidden ${isMenuOpen ? "pointer-events-auto" : "pointer-events-none"
-          }`}
-      >
-        <button
-          aria-label="Close navigation overlay"
-          className={`absolute inset-0 bg-slate-950/72 backdrop-blur-sm transition-opacity duration-500 ease-out ${isMenuOpen ? "opacity-100" : "opacity-0"
-            }`}
-          onClick={closeMenu}
-          type="button"
-        />
-
-        <aside
-          aria-modal="true"
-          className={`absolute left-0 top-0 flex h-full w-[min(90vw,22rem)] transform-gpu flex-col border-r border-white/10 bg-[linear-gradient(180deg,rgba(5,8,19,0.985),rgba(13,16,34,0.985))] shadow-[18px_0_60px_rgba(0,0,0,0.42)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] will-change-transform ${isMenuOpen ? "translate-x-0" : "-translate-x-full"
-            }`}
-          id="mobile-nav-drawer"
-          role="dialog"
-        >
-          <div
-            className={`flex items-center justify-between border-b border-white/8 px-3.5 pb-3.5 pt-[max(0.875rem,env(safe-area-inset-top))] transition-all duration-500 ease-out sm:px-5 sm:pb-5 sm:pt-[max(1rem,env(safe-area-inset-top))] ${isMenuOpen ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
-              }`}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+            aria-label="Site menu"
+            aria-modal="true"
+            className="fixed inset-0 z-40 flex flex-col bg-ink-soft pt-[calc(var(--header-h)+1rem)] lg:hidden"
+            data-lenis-prevent
+            exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
+            id="mobile-menu"
+            initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
+            role="dialog"
+            transition={{ duration: 0.8, ease: easeInOut }}
           >
-            <span className="font-headline text-xs font-bold tracking-[0.28em] text-slate-300 uppercase sm:text-sm">
-              Menu
-            </span>
-            <button
-              aria-label="Close navigation menu"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white transition-colors duration-200 hover:border-primary/40 hover:bg-primary/10 sm:h-11 sm:w-11"
-              onClick={closeMenu}
-              type="button"
-            >
-              <span className="relative block h-4 w-4">
-                <span className="absolute left-0 top-[7px] h-0.5 w-4 rotate-45 rounded-full bg-current" />
-                <span className="absolute left-0 top-[7px] h-0.5 w-4 -rotate-45 rounded-full bg-current" />
-              </span>
-            </button>
-          </div>
-
-          <div className="flex-1 overflow-y-auto px-3.5 py-4.5 sm:px-5 sm:py-6">
             <div
-              className={`mb-5 rounded-[1.2rem] border border-white/8 bg-white/[0.03] p-3.5 transition-all duration-500 ease-out sm:mb-6 sm:rounded-[1.35rem] sm:p-4 ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
-                }`}
-            >
-              <span className="relative block h-20 w-60">
-                <Image
-                  alt="Zenvix logo"
-                  className="object-contain drop-shadow-[0_0_18px_rgba(143,245,255,0.16)]"
-                  fill
-                  sizes="240px"
-                  src="/zenvix/logo.png"
-                />
-              </span>
-              <p className="mt-3 text-sm leading-6 text-slate-400">
-                Premium design and development partner for modern digital
-                products.
-              </p>
-            </div>
+              aria-hidden="true"
+              className="orb-a pointer-events-none absolute -right-24 top-1/4 h-80 w-80 rounded-full bg-violet/25 blur-[90px]"
+            />
+            <div className="shell relative flex flex-1 flex-col justify-between overflow-y-auto pb-[max(1.5rem,env(safe-area-inset-bottom))]">
+              <ul className="space-y-1">
+                {menuItems.map((item, index) => (
+                  <li className="overflow-hidden border-b border-line" key={item.id}>
+                    <motion.a
+                      animate={{ y: "0%" }}
+                      className="group flex items-baseline justify-between gap-4 py-4"
+                      exit={{ y: "100%", transition: { duration: 0.35, ease } }}
+                      href={sectionHref(pathname, item.id)}
+                      initial={{ y: "100%" }}
+                      onClick={(event) => goToSection(event, item.id)}
+                      ref={index === 0 ? firstLinkRef : undefined}
+                      transition={{ duration: 0.9, ease, delay: 0.25 + index * 0.06 }}
+                    >
+                      <span className="font-display text-[clamp(2.6rem,12vw,4.5rem)] font-bold leading-none tracking-[-0.045em] transition-colors group-hover:text-violet">
+                        {item.label}
+                      </span>
+                      <span className="label text-muted">0{index + 1}</span>
+                    </motion.a>
+                  </li>
+                ))}
+              </ul>
 
-            <div className="space-y-2.5 sm:space-y-3">
-              {navItems.map((item, index) => (
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-10 grid gap-6 sm:grid-cols-2"
+                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.8, ease, delay: 0.55 }}
+              >
+                <div className="space-y-2">
+                  <p className="label text-muted">Get in touch</p>
+                  <a className="link-line block text-lg" href={`mailto:${site.email}`}>
+                    {site.email}
+                  </a>
+                  {site.phones.map((phone) => (
+                    <a className="link-line block text-lg" href={`tel:${phone.tel}`} key={phone.tel}>
+                      {phone.display}
+                    </a>
+                  ))}
+                  <a
+                    className="link-line block text-lg"
+                    href={whatsappLink()}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    WhatsApp · {site.whatsappDisplay}
+                  </a>
+                </div>
                 <a
-                  className={`flex items-center justify-between rounded-[1.15rem] border border-white/8 bg-white/[0.03] px-3.5 py-3.5 font-headline text-[14px] font-bold tracking-tight text-slate-100 transform-gpu transition-[transform,opacity,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/30 hover:bg-primary/10 hover:text-white sm:rounded-2xl sm:px-4 sm:py-4 sm:text-base ${isMenuOpen ? "translate-x-0 opacity-100" : "-translate-x-5 opacity-0"
-                    }`}
-                  href={`#${item.toLowerCase()}`}
-                  key={item}
-                  onClick={closeMenu}
-                  style={{ transitionDelay: `${90 + index * 45}ms` }}
+                  className="flex items-center justify-center gap-2 self-end rounded-full bg-fg px-6 py-4 font-display font-bold text-ink"
+                  href={sectionHref(pathname, "contact")}
+                  onClick={(event) => goToSection(event, "contact")}
                 >
-                  <span>{item}</span>
-                  <span className="text-primary/80">&rsaquo;</span>
+                  Let&apos;s Build Together
+                  <Icon name="arrow_right" />
                 </a>
-              ))}
+              </motion.div>
             </div>
-          </div>
-
-          <div
-            className={`border-t border-white/8 px-3.5 pb-[max(0.875rem,env(safe-area-inset-bottom))] pt-3.5 transition-all duration-500 ease-out sm:px-5 sm:pb-[max(1rem,env(safe-area-inset-bottom))] sm:pt-5 ${isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-              }`}
-            style={{ transitionDelay: "180ms" }}
-          >
-            <a
-              className="flex justify-center rounded-[1.15rem] bg-primary px-4 py-3.5 font-headline text-[14px] font-bold tracking-tight text-on-primary shadow-[0_0_24px_rgba(143,245,255,0.24)] transition-transform duration-200 hover:scale-[1.01] sm:rounded-2xl sm:py-4 sm:text-base"
-              href="#contact"
-              onClick={closeMenu}
-            >
-              Let&apos;s Build Together
-            </a>
-          </div>
-        </aside>
-      </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

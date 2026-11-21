@@ -1,40 +1,156 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { fadeUp, viewport } from "./motionPresets";
+import { usePathname } from "next/navigation";
+import Icon from "./Icon";
+import Magnetic from "./motion/Magnetic";
+import { Reveal, RevealItem } from "./motion/Reveal";
+import { getLenis } from "./motion/SmoothScroll";
+import { ease } from "./motionPresets";
+import { footerLinks, navItems, sectionHref, site, whatsappLink } from "./siteConfig";
 import ZenvixLogo from "./ZenvixLogo";
 
-const footerLinks = ["Privacy Policy", "Terms of Service", "LinkedIn", "GitHub"];
+const wordmark = site.name.toUpperCase().split("");
+
+function scrollToTop() {
+  const lenis = getLenis();
+  if (lenis) lenis.scrollTo(0, { duration: 1.6 });
+  else window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 export default function Footer() {
+  const pathname = usePathname();
+  const year = new Date().getFullYear();
+
   return (
-    <motion.footer
-      className="mt-20 w-full border-t border-white/5 bg-[#0b0e14] py-16"
-      initial="hidden"
-      viewport={viewport}
-      whileInView="visible"
-      variants={fadeUp}
-    >
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-10 px-12 md:flex-row">
-        <div className="flex flex-col items-center gap-4 text-center md:items-start md:text-left">
-          <ZenvixLogo className="mx-auto md:mx-0" placement="footer" />
-          <p className="font-headline text-sm tracking-wide text-slate-500">
-            © 2024 Zenvix. Engineered for the Digital Aurora.
+    <footer className="relative overflow-hidden border-t border-line bg-ink pt-20 md:pt-28">
+      <div className="shell">
+        {/* CTA line */}
+        <Reveal className="flex flex-col gap-8 border-b border-line pb-16 md:flex-row md:items-end md:justify-between md:pb-24">
+          <p className="max-w-3xl font-display text-big font-bold">
+            Have an idea? <span className="font-serif font-normal italic text-gradient pr-[0.05em]">Let&apos;s build</span>{" "}
+            it together.
           </p>
-        </div>
-        <div className="flex flex-wrap justify-center gap-8 font-headline text-sm tracking-wide">
-          {footerLinks.map((link) => (
-            <motion.a
-              className="text-slate-500 transition-all duration-200 hover:-translate-y-1 hover:text-white"
-              href="#"
-              key={link}
-              whileHover={{ y: -4 }}
+          <Magnetic>
+            <a
+              className="group relative flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gradient-to-br from-violet to-blue text-center font-display text-sm font-bold text-white md:h-40 md:w-40"
+              href={sectionHref(pathname, "contact")}
             >
-              {link}
-            </motion.a>
-          ))}
+              <span className="absolute inset-0 scale-0 rounded-full bg-fg transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-100" />
+              <span className="relative flex flex-col items-center gap-1 transition-colors duration-500 group-hover:text-ink">
+                <Icon className="text-xl transition-transform duration-500 group-hover:-rotate-45" name="arrow_right" />
+                Start a project
+              </span>
+            </a>
+          </Magnetic>
+        </Reveal>
+
+        {/* Columns */}
+        <Reveal className="grid gap-12 py-16 sm:grid-cols-2 md:py-20 lg:grid-cols-12" stagger>
+          <RevealItem className="lg:col-span-4">
+            <ZenvixLogo placement="footer" />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.signature}</p>
+          </RevealItem>
+
+          <RevealItem className="lg:col-span-2 lg:col-start-6">
+            <p className="label mb-5 text-muted">Navigate</p>
+            <ul className="space-y-3">
+              {[...navItems, { label: "Contact", id: "contact" }].map((item) => (
+                <li key={item.id}>
+                  <a className="roll-trigger font-display text-lg font-semibold" href={sectionHref(pathname, item.id)}>
+                    <span className="roll">
+                      <span>{item.label}</span>
+                      <span aria-hidden="true" className="text-violet">{item.label}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </RevealItem>
+
+          <RevealItem className="lg:col-span-3">
+            <p className="label mb-5 text-muted">Contact</p>
+            <ul className="space-y-3 text-lg">
+              <li>
+                <a className="link-line break-all" href={`mailto:${site.email}`}>
+                  {site.email}
+                </a>
+              </li>
+              {site.phones.map((phone) => (
+                <li key={phone.tel}>
+                  <a className="link-line" href={`tel:${phone.tel}`}>
+                    {phone.display}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a className="link-line" href={whatsappLink()} rel="noopener noreferrer" target="_blank">
+                  WhatsApp · {site.whatsappDisplay}
+                </a>
+              </li>
+            </ul>
+          </RevealItem>
+
+          <RevealItem className="lg:col-span-2">
+            <p className="label mb-5 text-muted">Elsewhere</p>
+            <ul className="space-y-3">
+              {footerLinks.map((link) => (
+                <li key={link.label}>
+                  <a className="group inline-flex items-center gap-1 text-silver transition-colors hover:text-fg" href={link.href}>
+                    <span className="link-line">{link.label}</span>
+                    <Icon
+                      className="text-sm opacity-0 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
+                      name="arrow_outward"
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </RevealItem>
+        </Reveal>
+
+        <div className="flex flex-col gap-4 border-t border-line py-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+          {/* Year is baked in at build time; avoid a hydration warning if the build predates New Year. */}
+          <p suppressHydrationWarning>© {year} Zenvix. {site.signature}</p>
+          <p className="label">{site.tagline.join(" • ")}</p>
+          <button
+            className="roll-trigger inline-flex items-center gap-2 self-start font-semibold text-fg sm:self-auto"
+            onClick={scrollToTop}
+            type="button"
+          >
+            <span className="roll">
+              <span>Back to top</span>
+              <span aria-hidden="true">Back to top</span>
+            </span>
+            <Icon name="arrow_up" />
+          </button>
         </div>
       </div>
-    </motion.footer>
+
+      {/* Oversized wordmark */}
+      <div aria-hidden="true" className="relative select-none overflow-hidden px-[var(--gutter)]">
+        <motion.div
+          className="flex justify-between font-display text-[23vw] font-extrabold leading-[0.76] tracking-[-0.06em]"
+          initial="hidden"
+          viewport={{ once: true, amount: 0.3 }}
+          whileInView="visible"
+          variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.06 } } }}
+        >
+          {wordmark.map((letter, index) => (
+            <span className="block overflow-hidden" key={`${letter}-${index}`}>
+              <motion.span
+                className={`block ${index >= 3 ? "text-gradient" : "bg-gradient-to-b from-silver to-white/20 bg-clip-text text-transparent"}`}
+                variants={{
+                  hidden: { y: "100%" },
+                  visible: { y: "0%", transition: { duration: 1.2, ease } },
+                }}
+              >
+                {letter}
+              </motion.span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
+    </footer>
   );
 }

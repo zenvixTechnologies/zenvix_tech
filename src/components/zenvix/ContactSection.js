@@ -1,12 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState } from "react";
-import { fadeUp, staggerContainer, viewport } from "./motionPresets";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import Icon, { WhatsAppGlyph } from "./Icon";
+import Magnetic from "./motion/Magnetic";
+import { Reveal, RevealItem } from "./motion/Reveal";
+import SplitText from "./motion/SplitText";
+import { ease } from "./motionPresets";
+import { site, whatsappLink } from "./siteConfig";
 
-const CONTACT_EMAIL = "zenvix2026@gmail.com";
-const WHATSAPP_NUMBER = "916282685392";
-const DISPLAY_PHONE = "+91 6282685392";
+const CONTACT_EMAIL = site.email;
+const WHATSAPP_NUMBER = site.whatsappNumber;
 
 const initialFormData = {
   name: "",
@@ -15,31 +19,119 @@ const initialFormData = {
   message: "",
 };
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_PATTERN = /^\+?[\d\s()-]{7,20}$/;
+
+function validate(values) {
+  const errors = {};
+  if (!values.name.trim()) errors.name = "Please tell us your name.";
+  if (!values.email.trim()) errors.email = "We need an email to reply to you.";
+  else if (!EMAIL_PATTERN.test(values.email.trim())) errors.email = "That email doesn't look quite right.";
+  if (values.phone.trim() && !PHONE_PATTERN.test(values.phone.trim())) {
+    errors.phone = "Use digits only, with an optional + country code.";
+  }
+  if (!values.message.trim()) errors.message = "A line or two about your project helps a lot.";
+  return errors;
+}
+
+function Field({ id, name, label, type = "text", value, error, onChange, onBlur, multiline, autoComplete }) {
+  const InputTag = multiline ? "textarea" : "input";
+  const errorId = `${id}-error`;
+
+  return (
+    <div className="field" data-invalid={error ? "true" : "false"}>
+      <InputTag
+        aria-describedby={error ? errorId : undefined}
+        aria-invalid={error ? "true" : "false"}
+        autoComplete={autoComplete}
+        className={`field__input ${multiline ? "min-h-[8rem] resize-none" : ""}`}
+        id={id}
+        name={name}
+        onBlur={onBlur}
+        onChange={onChange}
+        placeholder=" "
+        rows={multiline ? 4 : undefined}
+        type={multiline ? undefined : type}
+        value={value}
+      />
+      <label className="field__label" htmlFor={id}>
+        {label}
+      </label>
+      <span aria-hidden="true" className="field__bar" />
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-2 text-sm text-[#ff8a8a]"
+            exit={{ opacity: 0, y: -4 }}
+            id={errorId}
+            initial={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.3 }}
+          >
+            {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export default function ContactSection() {
   const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [submitState, setSubmitState] = useState({
     type: "idle",
     message: "",
   });
 
+  // Pre-fill the message when a service row is clicked (only if still empty).
+  useEffect(() => {
+    const onService = (event) => {
+      setFormData((current) =>
+        current.message.trim()
+          ? current
+          : { ...current, message: `Hi Zenvix, I'm interested in ${event.detail}. ` },
+      );
+    };
+    window.addEventListener("zenvix:service", onService);
+    return () => window.removeEventListener("zenvix:service", onService);
+  }, []);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
+    const next = { ...formData, [name]: value };
 
-    setFormData((currentFormData) => ({
-      ...currentFormData,
-      [name]: value,
-    }));
+    setFormData(next);
+    if (touched[name]) setErrors(validate(next));
+  };
+
+  const handleBlur = (event) => {
+    const { name } = event.target;
+    setTouched((current) => ({ ...current, [name]: true }));
+    setErrors(validate(formData));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    const nextErrors = validate(formData);
+    setErrors(nextErrors);
+    setTouched({ name: true, email: true, phone: true, message: true });
+
+    if (Object.keys(nextErrors).length > 0) {
+      setSubmitState({ type: "error", message: "Please fix the highlighted fields." });
+      const firstInvalid = Object.keys(nextErrors)[0];
+      document.getElementById(`contact-${firstInvalid}`)?.focus();
+      return;
+    }
 
     const phoneDetails = formData.phone ? `\n*Phone:* ${formData.phone}` : "";
     const textParams = `*New Project Inquiry*\n\n*Name:* ${formData.name}\n*Email:* ${formData.email}${phoneDetails}\n\n*Message:*\n${formData.message}`;
 
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(textParams)}`;
 
-    window.open(whatsappUrl, "_blank");
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
 
     setSubmitState({
       type: "success",
@@ -47,154 +139,161 @@ export default function ContactSection() {
     });
   };
 
-  return (
-    <section className="relative py-32" id="contact">
-      <motion.div
-        animate={{ scale: [1, 1.08, 1], opacity: [0.45, 0.75, 0.45] }}
-        className="aurora-blur absolute top-1/2 left-1/2 h-[400px] w-[800px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/5"
-        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="relative z-10 mx-auto max-w-4xl px-8 text-center"
-        initial="hidden"
-        viewport={viewport}
-        whileInView="visible"
-        variants={staggerContainer}
-      >
-        <motion.h2
-          className="mb-8 font-headline text-5xl font-extrabold tracking-tight text-white md:text-6xl"
-          variants={fadeUp}
-        >
-          Let&apos;s Build Something Great
-        </motion.h2>
+  const visibleError = (name) => (touched[name] ? errors[name] : undefined);
 
-        <motion.div
-          className="mb-12 flex flex-wrap items-center justify-center gap-6 text-lg text-on-surface-variant"
-          variants={fadeUp}
-        >
-          <div className="flex items-center gap-2">
-            <span className="text-white/60">Phone / WhatsApp:</span>
-            <a
-              className="font-bold text-primary transition-colors hover:text-white"
-              href={`https://wa.me/${WHATSAPP_NUMBER}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {DISPLAY_PHONE}
-            </a>
-          </div>
-          <span className="hidden sm:inline text-white/30">•</span>
-          <div className="flex items-center gap-2">
-            <span className="text-white/60">Email:</span>
-            <a
-              className="font-bold text-primary transition-colors hover:text-white"
-              href={`mailto:${CONTACT_EMAIL}`}
-            >
-              {CONTACT_EMAIL}
-            </a>
-          </div>
-        </motion.div>
+  return (
+    <section className="relative overflow-hidden bg-ink py-24 md:py-40" id="contact">
+      <div
+        aria-hidden="true"
+        className="orb-b pointer-events-none absolute -right-[20%] top-[10%] h-[45vmax] w-[45vmax] rounded-full bg-violet-deep/20 blur-[120px]"
+      />
+
+      <div className="shell relative grid gap-16 lg:grid-cols-12 lg:gap-10">
+        <div className="lg:col-span-6">
+          <p className="label mb-6 text-muted">(04) — Contact</p>
+          <h2 aria-label="Let's Build Something Great" className="font-display text-huge font-bold">
+            <span aria-hidden="true">
+              <SplitText as="span" className="block" text="Let's Build" />
+              <SplitText as="span" className="block" delay={0.1} text="Something" />
+              <SplitText
+                as="span"
+                className="block font-serif font-normal italic tracking-[-0.03em]"
+                delay={0.2}
+                text="Great"
+                wordClassName="text-gradient pr-[0.06em]"
+              />
+            </span>
+          </h2>
+
+          <Reveal className="mt-14 grid gap-8 sm:grid-cols-2 lg:mt-20" stagger>
+            <RevealItem>
+              <p className="label mb-3 text-muted">Phone</p>
+              <ul className="space-y-2">
+                {site.phones.map((phone) => (
+                  <li key={phone.tel}>
+                    <a
+                      className="link-line link-line--static font-display text-xl font-semibold md:text-2xl"
+                      href={`tel:${phone.tel}`}
+                    >
+                      {phone.display}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </RevealItem>
+            <RevealItem>
+              <p className="label mb-3 text-muted">WhatsApp</p>
+              <a
+                className="link-line link-line--static font-display text-xl font-semibold md:text-2xl"
+                href={whatsappLink()}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                {site.whatsappDisplay}
+              </a>
+            </RevealItem>
+            <RevealItem className="sm:col-span-2">
+              <p className="label mb-3 text-muted">Email</p>
+              <a
+                className="link-line link-line--static break-all font-display text-xl font-semibold md:text-2xl"
+                href={`mailto:${CONTACT_EMAIL}`}
+              >
+                {CONTACT_EMAIL}
+              </a>
+            </RevealItem>
+          </Reveal>
+        </div>
 
         <motion.form
+          className="relative rounded-[var(--radius-card)] border border-line bg-white/[0.02] p-6 backdrop-blur-sm sm:p-10 lg:col-span-6 lg:self-end"
+          initial={{ opacity: 0, y: 40 }}
+          noValidate
           onSubmit={handleSubmit}
-          className="glass-card space-y-6 rounded-2xl p-8 text-left md:p-12"
-          variants={fadeUp}
+          transition={{ duration: 1.1, ease }}
+          viewport={{ once: true, amount: 0.2 }}
+          whileInView={{ opacity: 1, y: 0 }}
         >
-          <div className="grid gap-6 md:grid-cols-3">
-            <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
-              <label
-                className="text-sm font-bold text-on-surface-variant"
-                htmlFor="contact-name"
-              >
-                Your Name
-              </label>
-              <input
-                className="w-full border-b border-outline-variant/30 bg-transparent py-3 text-white transition-colors focus:border-primary focus:outline-none"
-                id="contact-name"
-                name="name"
-                onChange={handleChange}
-                placeholder="John Doe"
-                required
-                type="text"
-                value={formData.name}
-              />
-            </motion.div>
-            <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
-              <label
-                className="text-sm font-bold text-on-surface-variant"
-                htmlFor="contact-email"
-              >
-                Email Address
-              </label>
-              <input
-                className="w-full border-b border-outline-variant/30 bg-transparent py-3 text-white transition-colors focus:border-primary focus:outline-none"
-                id="contact-email"
-                name="email"
-                onChange={handleChange}
-                placeholder="john@example.com"
-                required
-                type="email"
-                value={formData.email}
-              />
-            </motion.div>
-            <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
-              <label
-                className="text-sm font-bold text-on-surface-variant"
-                htmlFor="contact-phone"
-              >
-                Phone Number
-              </label>
-              <input
-                className="w-full border-b border-outline-variant/30 bg-transparent py-3 text-white transition-colors focus:border-primary focus:outline-none"
+          <p className="label mb-4 text-muted">Tell us about your project</p>
+          <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            <Field
+              autoComplete="name"
+              error={visibleError("name")}
+              id="contact-name"
+              label="Your Name *"
+              name="name"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={formData.name}
+            />
+            <Field
+              autoComplete="email"
+              error={visibleError("email")}
+              id="contact-email"
+              label="Email Address *"
+              name="email"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              type="email"
+              value={formData.email}
+            />
+            <div className="sm:col-span-2">
+              <Field
+                autoComplete="tel"
+                error={visibleError("phone")}
                 id="contact-phone"
+                label="Phone Number (optional)"
                 name="phone"
+                onBlur={handleBlur}
                 onChange={handleChange}
-                placeholder="+91 6282685392"
                 type="tel"
                 value={formData.phone}
               />
-            </motion.div>
+            </div>
+            <div className="sm:col-span-2">
+              <Field
+                error={visibleError("message")}
+                id="contact-message"
+                label="How can we help? *"
+                multiline
+                name="message"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={formData.message}
+              />
+            </div>
           </div>
-          <motion.div className="space-y-2" whileFocus={{ scale: 1.01 }}>
-            <label
-              className="text-sm font-bold text-on-surface-variant"
-              htmlFor="contact-message"
-            >
-              How can we help?
-            </label>
-            <textarea
-              className="w-full resize-none border-b border-outline-variant/30 bg-transparent py-3 text-white transition-colors focus:border-primary focus:outline-none"
-              id="contact-message"
-              name="message"
-              onChange={handleChange}
-              placeholder="Tell us about your project..."
-              required
-              rows="4"
-              value={formData.message}
-            />
-          </motion.div>
-          <motion.button
-            className="mt-4 flex w-full items-center justify-center gap-3 rounded-xl bg-primary py-4 font-headline font-bold text-on-primary transition-all hover:shadow-[0_10px_40px_rgba(143,245,255,0.3)]"
-            type="submit"
-            whileHover={{ y: -3, scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <svg
-              className="h-5 w-5 fill-current"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.197 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.99c-.002 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" />
-            </svg>
-            Send Message via WhatsApp
-          </motion.button>
-          {submitState.message && (
-            <p aria-live="polite" className="text-sm text-primary">
-              {submitState.message}
+
+          <div className="mt-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <p className="max-w-[14rem] text-xs leading-relaxed text-muted">
+              Submitting opens WhatsApp with your message ready to send.
             </p>
-          )}
+            <Magnetic strength={0.2}>
+              <button
+                className="group relative inline-flex w-full items-center justify-center gap-3 overflow-hidden whitespace-nowrap rounded-full bg-fg px-6 py-4 font-display font-bold text-ink sm:w-auto"
+                type="submit"
+              >
+                <span className="absolute inset-0 translate-y-full rounded-full bg-wa transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-y-0" />
+                <WhatsAppGlyph className="relative h-5 w-5" />
+                <span className="relative">Send Message via WhatsApp</span>
+                <Icon
+                  className="relative transition-transform duration-500 group-hover:translate-x-1"
+                  name="arrow_right"
+                />
+              </button>
+            </Magnetic>
+          </div>
+
+          <p
+            aria-live="polite"
+            className={`mt-5 min-h-[1.25rem] text-sm ${
+              submitState.type === "error" ? "text-[#ff8a8a]" : "text-violet"
+            }`}
+            role="status"
+          >
+            {submitState.message}
+          </p>
         </motion.form>
-      </motion.div>
+      </div>
     </section>
   );
 }

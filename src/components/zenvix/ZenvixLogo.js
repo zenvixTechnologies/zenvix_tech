@@ -1,30 +1,27 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "framer-motion";
 
 const sizes = {
-  nav: "h-12 w-36 md:h-14 md:w-40",
-  footer: "h-24 w-44 md:h-28 md:w-52",
+  nav: "h-14 w-14 sm:h-16 sm:w-16",
+  menu: "h-16 w-16",
+  footer: "h-28 w-28 md:h-32 md:w-32",
 };
 
-export default function ZenvixLogo({ placement = "nav", className = "" }) {
+/**
+ * The logo PNG is a 1024² canvas with generous transparent padding;
+ * scaling inside a clipped box keeps the mark crisp and properly sized.
+ */
+export default function ZenvixLogo({ placement = "nav", className = "", priority = false }) {
   return (
-    <motion.div
-      className={`relative flex items-center justify-center rounded-lg ${sizes[placement]} ${className}`}
-      whileHover={{ scale: 1.04 }}
-      whileTap={{ scale: 0.98 }}
-    >
+    <span className={`relative block overflow-hidden ${sizes[placement]} ${className}`}>
       <Image
         alt="Zenvix logo"
-        className="max-h-full max-w-full object-contain drop-shadow-[0_0_18px_rgba(143,245,255,0.16)]"
+        className="scale-[1.42] object-contain"
         draggable="false"
-        height={192}
-        loading={placement === "nav" ? "eager" : "lazy"}
-        priority={placement === "nav"}
+        fill
+        priority={priority}
+        sizes="(max-width: 768px) 96px, 128px"
         src="/zenvix/logo.png"
-        width={384}
       />
-    </motion.div>
+    </span>
   );
 }

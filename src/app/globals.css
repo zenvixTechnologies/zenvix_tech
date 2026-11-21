@@ -1,129 +1,523 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ */
+/*  Zenvix design tokens                                               */
+/*  Palette derived from the logo: violet → electric blue on silver.   */
+/* ------------------------------------------------------------------ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --font-geist-sans: Arial, Helvetica, sans-serif;
-  --font-geist-mono: "Courier New", Courier, monospace;
-  --font-manrope: "Manrope", Arial, Helvetica, sans-serif;
-  --font-inter: "Inter", Arial, Helvetica, sans-serif;
+  --ink: #07070a;
+  --ink-soft: #0e0e13;
+  --ink-raise: #16161d;
+  --paper: #eeece6;
+  --paper-deep: #e3e0d8;
+  --fg: #f3f2ee;
+  --muted: #9b9ba7;
+  --muted-dark: #5d5c63;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-dark: rgba(11, 11, 14, 0.14);
+  --violet: #9d5cff;
+  --violet-deep: #6a35f2;
+  --blue: #2f8fff;
+  --silver: #c9ccd8;
+  --wa: #25d366;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+
+  --gutter: clamp(1rem, 3.4vw, 3rem);
+  --header-h: 5rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-headline: var(--font-manrope);
-  --font-body: var(--font-inter);
-  --font-label: var(--font-inter);
-  --color-tertiary-fixed: #ff85e4;
-  --color-error: #ff716c;
-  --color-secondary-fixed: #e7c5ff;
-  --color-surface-container-high: #1c2028;
-  --color-tertiary-container: #ff05e5;
-  --color-on-primary-fixed-variant: #005e64;
-  --color-tertiary: #ff59e3;
-  --color-surface-container-lowest: #000000;
-  --color-secondary: #c47fff;
-  --color-surface-container-low: #10131a;
-  --color-surface-container: #161a21;
-  --color-surface: #0b0e14;
-  --color-on-secondary-fixed: #500086;
-  --color-on-surface: #ecedf6;
-  --color-on-secondary: #340059;
-  --color-on-tertiary-container: #1b0017;
-  --color-surface-variant: #22262f;
-  --color-on-error: #490006;
-  --color-surface-container-highest: #22262f;
-  --color-inverse-primary: #006a71;
-  --color-on-secondary-container: #fff5ff;
-  --color-on-background: #ecedf6;
-  --color-surface-bright: #282c36;
-  --color-surface-tint: #8ff5ff;
-  --color-inverse-surface: #f9f9ff;
-  --color-inverse-on-surface: #52555c;
-  --color-primary-fixed-dim: #00deec;
-  --color-outline: #73757d;
-  --color-tertiary-fixed-dim: #ff68e3;
-  --color-tertiary-dim: #ff59e3;
-  --color-primary-dim: #00deec;
-  --color-on-surface-variant: #a9abb3;
-  --color-on-tertiary-fixed-variant: #6d0061;
-  --color-surface-dim: #0b0e14;
-  --color-on-error-container: #ffa8a3;
-  --color-on-primary-fixed: #003f43;
-  --color-on-tertiary: #42003a;
-  --color-secondary-container: #8c00e5;
-  --color-secondary-fixed-dim: #ddb3ff;
-  --color-error-container: #9f0519;
-  --color-primary-container: #00eefc;
-  --color-on-secondary-fixed-variant: #7900c6;
-  --color-on-tertiary-fixed: #33002d;
-  --color-error-dim: #d7383b;
-  --color-outline-variant: #45484f;
-  --color-primary-fixed: #00eefc;
-  --color-on-primary: #005d63;
-  --color-on-primary-container: #005359;
-  --color-secondary-dim: #a533ff;
-  --color-primary: #8ff5ff;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-raise: var(--ink-raise);
+  --color-paper: var(--paper);
+  --color-paper-deep: var(--paper-deep);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-muted-dark: var(--muted-dark);
+  --color-line: var(--line);
+  --color-line-dark: var(--line-dark);
+  --color-violet: var(--violet);
+  --color-violet-deep: var(--violet-deep);
+  --color-blue: var(--blue);
+  --color-silver: var(--silver);
+  --color-wa: var(--wa);
+
+  --font-display: var(--font-manrope), "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+  --radius-section: clamp(1.5rem, 3vw, 2.75rem);
+
+  --ease-expo: var(--ease-out-expo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ------------------------------------------------------------------ */
+/*  Base                                                               */
+/* ------------------------------------------------------------------ */
+html {
+  background: var(--ink);
+  color: var(--fg);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 0;
+  /* Hide the page scrollbar; scrolling (wheel, touch, keyboard) still works */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ink);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
 }
 
-.glass-card {
-  background: rgba(34, 38, 47, 0.4);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(69, 72, 79, 0.15);
+::selection {
+  background: var(--violet);
+  color: #fff;
 }
 
-.aurora-blur {
-  filter: blur(100px);
-  z-index: -1;
+:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.beam {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, #c47fff, transparent);
-  width: 200px;
+img {
+  user-select: none;
 }
 
-.zenvix-theme {
-  --background: #0b0e14;
-  --foreground: #ecedf6;
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
 }
 
-.hero-code-type {
-  display: inline-block;
-  width: 0;
+/* ------------------------------------------------------------------ */
+/*  Utilities                                                          */
+/* ------------------------------------------------------------------ */
+@utility shell {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 1680px;
+  padding-inline: var(--gutter);
+}
+
+@utility text-mega {
+  font-size: clamp(3.9rem, 11.6vw, 12.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+}
+
+@utility text-huge {
+  font-size: clamp(2.6rem, 7.4vw, 8rem);
+  line-height: 0.94;
+  letter-spacing: -0.05em;
+}
+
+@utility text-big {
+  font-size: clamp(2rem, 4.6vw, 4.75rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+@utility text-lead {
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  line-height: 1.6;
+}
+
+@utility label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@utility text-gradient {
+  background: linear-gradient(100deg, var(--violet) 0%, #7b6bff 45%, var(--blue) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Film grain overlay, static so it costs nothing per frame */
+.grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+/* Rolling text hover: two stacked copies slide up */
+.roll {
+  position: relative;
+  display: inline-flex;
   overflow: hidden;
-  border-right: 2px solid #8ff5ff;
-  animation: hero-code-type 3.8s steps(23, end) infinite;
+  vertical-align: top;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.55s var(--ease-out-expo);
+}
+.roll > span + span {
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+}
+.group:hover .roll > span:first-child,
+.roll-trigger:hover .roll > span:first-child,
+.roll-trigger:focus-visible .roll > span:first-child {
+  transform: translateY(-105%);
+}
+.group:hover .roll > span + span,
+.roll-trigger:hover .roll > span + span,
+.roll-trigger:focus-visible .roll > span + span {
+  transform: translateY(0);
 }
 
-@keyframes hero-code-type {
+/* Underline that draws in from left, exits to right */
+.link-line {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 100% 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.6s var(--ease-out-expo);
+  padding-bottom: 0.08em;
+}
+.link-line:hover,
+.link-line:focus-visible,
+.group:hover .link-line {
+  background-size: 100% 1px;
+  background-position: 0% 100%;
+}
+.link-line--static {
+  background-size: 100% 1px;
+  background-position: 0% 100%;
+}
+.link-line--static:hover {
+  animation: line-redraw 0.9s var(--ease-out-expo);
+}
+@keyframes line-redraw {
+  0% {
+    background-size: 100% 1px;
+    background-position: 100% 100%;
+  }
+  45% {
+    background-size: 0% 1px;
+    background-position: 100% 100%;
+  }
+  46% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-size: 100% 1px;
+    background-position: 0% 100%;
+  }
+}
+
+/* Marquee */
+.marquee {
+  --marquee-duration: 36s;
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-width: 100%;
+  animation: marquee var(--marquee-duration) linear infinite;
+}
+.marquee--reverse .marquee__track {
+  animation-direction: reverse;
+}
+.marquee--pausable:hover .marquee__track {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+/* Slow ambient orbs */
+@keyframes drift-a {
   0%,
-  12% {
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(6%, -4%, 0) scale(1.08);
+  }
+}
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-5%, 5%, 0) scale(1.1);
+  }
+}
+.orb-a {
+  animation: drift-a 18s ease-in-out infinite;
+}
+.orb-b {
+  animation: drift-b 22s ease-in-out infinite;
+}
+
+/* Typing caret used in hero terminal line */
+.type-line {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  border-right: 1.5px solid var(--violet);
+  animation: type-line 4.4s steps(24, end) infinite;
+}
+@keyframes type-line {
+  0%,
+  10% {
     width: 0;
   }
-  58%,
-  82% {
-    width: 23ch;
+  55%,
+  85% {
+    width: 24ch;
   }
   100% {
     width: 0;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/*  First-paint entrances                                              */
+/*  Above-the-fold reveals run in CSS so they start with the first     */
+/*  paint instead of waiting for JS hydration (protects LCP on slow    */
+/*  phones). --intro is how long the first-visit curtain holds; it is  */
+/*  0 once the intro has been seen this session.                       */
+/* ------------------------------------------------------------------ */
+:root {
+  --intro: 1.15s;
+}
+html[data-intro="seen"] {
+  --intro: 0s;
+}
+
+.enter-line,
+.enter-word,
+.enter-rise {
+  animation-duration: 1.25s;
+  animation-timing-function: var(--ease-out-expo);
+  animation-fill-mode: both;
+  animation-delay: calc(var(--intro) + var(--d, 0s));
+}
+.enter-line {
+  animation-name: enter-line;
+  transform-origin: bottom left;
+}
+.enter-word {
+  animation-name: enter-word;
+  animation-duration: 1.1s;
+}
+.enter-rise {
+  animation-name: enter-rise;
+  animation-duration: 1s;
+}
+@keyframes enter-line {
+  from {
+    transform: translateY(112%) rotate(3deg);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes enter-word {
+  from {
+    transform: translateY(110%) rotate(4deg);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise, 24px));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Intro preloader: the curtain timing lives here so it never waits for JS. */
+.preloader {
+  animation: preloader-leave 0.95s var(--ease-in-out) var(--intro) both;
+}
+.preloader__brand {
+  animation: preloader-brand 0.9s var(--ease-out-expo) both;
+}
+.preloader__bar {
+  transform-origin: left;
+  animation: preloader-bar var(--intro) cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes preloader-leave {
+  to {
+    transform: translateY(-100%);
+    visibility: hidden;
+  }
+}
+@keyframes preloader-brand {
+  from {
+    transform: translateY(105%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes preloader-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Skipped instantly when already seen this session */
+html[data-intro="seen"] .preloader {
+  display: none;
+}
+
+/* Form fields */
+.field {
+  position: relative;
+}
+.field__input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  padding: 1.6rem 0 0.8rem;
+  color: var(--fg);
+  font-size: 1.05rem;
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.3s ease;
+}
+.field__input:focus-visible {
+  outline: none;
+}
+.field__label {
+  position: absolute;
+  left: 0;
+  top: 1.6rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+  pointer-events: none;
+  transform-origin: left top;
+  transition:
+    transform 0.45s var(--ease-out-expo),
+    color 0.3s ease;
+}
+.field__input:focus + .field__label,
+.field__input:not(:placeholder-shown) + .field__label {
+  transform: translateY(-1.35rem) scale(0.72);
+  color: var(--silver);
+}
+.field__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--violet), var(--blue));
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.7s var(--ease-out-expo);
+}
+.field__input:focus ~ .field__bar {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+.field[data-invalid="true"] .field__input {
+  border-color: #ff6b6b;
+}
+.field[data-invalid="true"] .field__label {
+  color: #ff8a8a;
+}
+.field__input:-webkit-autofill {
+  -webkit-text-fill-color: var(--fg);
+  transition: background-color 9999s ease-out 0s;
+}
+
+/* View transitions (route + shared image morph) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+  animation-timing-function: var(--ease-out-expo);
+}
+::view-transition-group(.project-morph) {
+  animation-duration: 0.7s;
+  animation-timing-function: var(--ease-out-expo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .marquee__track {
+    animation: none;
+  }
+  .type-line {
+    width: 24ch;
+    animation: none;
+  }
+  :root {
+    --intro: 0s;
+  }
+  .preloader {
+    display: none;
+  }
+  .enter-line,
+  .enter-word,
+  .enter-rise {
+    animation: none !important;
+  }
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }

@@ -1,9 +1,10 @@
+import { canonical } from "@/components/zenvix/seo";
 import ZenvixPage from "@/components/zenvix/ZenvixPage";
 
+// /zenvix renders the same page as /, so both point search engines at /.
 export const metadata = {
-  title: "Zenvix | Engineering the Future of Digital Experiences",
-  description:
-    "Zenvix blends high-end design with technical mastery to create digital products that define industries.",
+  title: { absolute: "Zenvix | Premium Web Development & UI/UX Agency" },
+  ...canonical("/"),
 };
 
 export default function Page() {

@@ -1,81 +1,111 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import Icon from "./Icon";
-import { fadeUp, staggerContainer, viewport } from "./motionPresets";
-import { portfolioProjects } from "./portfolioData";
+import ImageReveal from "./motion/ImageReveal";
+import SharedTransition from "./motion/SharedTransition";
+import SplitText from "./motion/SplitText";
+import { ease, viewport } from "./motionPresets";
 
-export default function PortfolioSection() {
+const revealDirections = ["up", "left", "right"];
+
+function ProjectRow({ project, index }) {
+  const flipped = index % 2 === 1;
+  const number = String(index + 1).padStart(2, "0");
+
   return (
-    <section className="py-32" id="portfolio">
-      <motion.div
-        className="mx-auto max-w-7xl px-8"
-        initial="hidden"
-        viewport={viewport}
-        whileInView="visible"
-        variants={staggerContainer}
+    <li>
+      <Link
+        aria-label={`Open details for ${project.title}`}
+        className="group grid items-end gap-6 md:grid-cols-12 md:gap-8"
+        data-cursor="view"
+        data-cursor-label="View"
+        href={`/zenvix/projects/${project.slug}`}
       >
-        <motion.div className="mb-16" variants={fadeUp}>
-          <h2 className="mb-4 font-headline text-4xl font-extrabold tracking-tight text-white md:text-5xl">
-            Our clients
-          </h2>
-        
-          <div className="beam" />
-        </motion.div>
+        <div className={`md:col-span-8 ${flipped ? "md:order-2 md:col-start-5" : ""}`}>
+          <SharedTransition name={`project-${project.slug}`}>
+            <ImageReveal
+              alt={project.alt}
+              className="aspect-video rounded-[var(--radius-card)]"
+              direction={revealDirections[index % revealDirections.length]}
+              hoverZoom
+              parallax={4}
+              sizes="(max-width: 768px) 100vw, 66vw"
+              src={project.image}
+            />
+          </SharedTransition>
+        </div>
+
         <motion.div
-          className="grid gap-8 lg:grid-cols-2"
-          variants={fadeUp}
+          className={`flex flex-col gap-5 md:col-span-4 ${flipped ? "md:order-1 md:col-start-1 md:row-start-1" : ""}`}
+          initial={{ opacity: 0, y: 30 }}
+          transition={{ duration: 1, ease, delay: 0.25 }}
+          viewport={viewport}
+          whileInView={{ opacity: 1, y: 0 }}
         >
-          {portfolioProjects.map((project) => (
-            <Link
-              aria-label={`Open details for ${project.title}`}
-              className="group block"
-              href={`/zenvix/projects/${project.slug}`}
-              key={project.slug}
-            >
-              <motion.article
-                className="glass-card overflow-hidden rounded-[2rem] border border-white/10 shadow-[0_30px_90px_rgba(0,0,0,0.28)]"
-                whileHover={{ y: -10 }}
+          <div className="flex items-center justify-between border-b border-line pb-4">
+            <span className="label text-muted">({number})</span>
+            <span className="label text-violet">{`{${project.eyebrow}}`}</span>
+          </div>
+          <h3 className="font-display text-big font-bold transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-x-2">
+            {project.title}
+          </h3>
+          <p className="line-clamp-3 text-sm leading-relaxed text-muted">{project.overview}</p>
+          <ul className="flex flex-wrap gap-2">
+            {project.tags.slice(0, 4).map((tag) => (
+              <li
+                className="rounded-full border border-line px-3 py-1 text-xs text-silver transition-colors duration-500 group-hover:border-white/20"
+                key={tag}
               >
-                <div className="border-b border-white/8 bg-gradient-to-br from-primary/8 via-transparent to-secondary/8 p-4 sm:p-6">
-                  <motion.div
-                    className="relative aspect-[16/10] w-full overflow-hidden rounded-[1.5rem] bg-surface"
-                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    whileHover={{ scale: 1.04 }}
-                  >
-                    <Image
-                      alt={project.alt}
-                      className="object-cover object-top transition-transform duration-500"
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 1024px) 100vw, 50vw"
-                      src={project.image}
-                    />
-                  </motion.div>
-                </div>
-                <div className="flex items-center justify-between gap-4 p-5 sm:p-6">
-                  <div>
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.26em] text-primary">
-                      {project.eyebrow}
-                    </p>
-                    <h3 className="font-headline text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
-                      {project.title}
-                    </h3>
-                  </div>
-                  <span className="rounded-full border border-white/12 bg-white/8 px-3 py-2 text-xs font-semibold text-white/80 backdrop-blur-xl transition-all duration-300 group-hover:border-primary/40 group-hover:text-primary sm:px-4">
-                    <span className="sm:hidden">
-                      <Icon className="text-base">arrow_outward</Icon>
-                    </span>
-                    <span className="hidden sm:inline">View Details</span>
-                  </span>
-                </div>
-              </motion.article>
-            </Link>
-          ))}
+                {tag}
+              </li>
+            ))}
+          </ul>
+          <span className="mt-2 inline-flex items-center gap-3 font-display text-sm font-bold">
+            <span className="relative flex h-11 w-11 items-center justify-center overflow-hidden rounded-full border border-line transition-colors duration-500 group-hover:border-transparent group-hover:bg-fg group-hover:text-ink">
+              <Icon
+                className="transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-8"
+                name="arrow_right"
+              />
+              <Icon
+                className="absolute -translate-x-8 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-0"
+                name="arrow_right"
+              />
+            </span>
+            <span className="link-line">View Details</span>
+          </span>
         </motion.div>
-      </motion.div>
+      </Link>
+    </li>
+  );
+}
+
+/** `projects` holds only the card fields (see toPortfolioCard in ZenvixPage). */
+export default function PortfolioSection({ projects }) {
+  return (
+    <section
+      className="relative z-20 -mt-[var(--radius-section)] rounded-t-[var(--radius-section)] bg-ink pb-24 pt-28 md:pb-40 md:pt-40"
+      id="portfolio"
+    >
+      <div className="shell">
+        <div className="mb-16 grid gap-8 md:mb-28 md:grid-cols-12 md:items-end">
+          <div className="md:col-span-8">
+            <p className="label mb-6 text-muted">(02) — Selected Works</p>
+            <SplitText as="h2" className="font-display text-huge font-bold" text="Our clients" />
+          </div>
+          <p className="text-lead max-w-sm text-muted md:col-span-4 md:justify-self-end">
+            Real products shipped for real businesses — from EdTech platforms and
+            news media to engineering brands and home-care services.
+          </p>
+        </div>
+
+        <ol className="space-y-24 md:space-y-40">
+          {projects.map((project, index) => (
+            <ProjectRow index={index} key={project.slug} project={project} />
+          ))}
+        </ol>
+      </div>
     </section>
   );
 }
