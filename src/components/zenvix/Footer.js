@@ -7,7 +7,7 @@ import Magnetic from "./motion/Magnetic";
 import { Reveal, RevealItem } from "./motion/Reveal";
 import { getLenis } from "./motion/SmoothScroll";
 import { ease } from "./motionPresets";
-import { footerLinks, navItems, sectionHref, site, whatsappLink } from "./siteConfig";
+import { navItems, sectionHref, site, whatsappLink } from "./siteConfig";
 import ZenvixLogo from "./ZenvixLogo";
 
 const wordmark = site.name.toUpperCase().split("");
@@ -47,12 +47,12 @@ export default function Footer() {
 
         {/* Columns */}
         <Reveal className="grid gap-12 py-16 sm:grid-cols-2 md:py-20 lg:grid-cols-12 max-md:grid-cols-2 max-md:gap-x-6 max-md:gap-y-10 max-md:py-12" stagger>
-          <RevealItem className="lg:col-span-4 max-md:col-span-2">
+          <RevealItem className="lg:col-span-3 max-md:col-span-2">
             <ZenvixLogo placement="footer" />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">{site.signature}</p>
           </RevealItem>
 
-          <RevealItem className="lg:col-span-2 lg:col-start-6">
+          <RevealItem className="lg:col-span-2 lg:col-start-5">
             <p className="label mb-5 text-muted">Navigate</p>
             <ul className="space-y-3">
               {[...navItems, { label: "Contact", id: "contact" }].map((item) => (
@@ -92,17 +92,14 @@ export default function Footer() {
           </RevealItem>
 
           <RevealItem className="lg:col-span-2">
-            <p className="label mb-5 text-muted">Elsewhere</p>
+            <p className="label mb-5 text-muted">Legal</p>
             <ul className="space-y-3">
-              {footerLinks.map((link) => (
-                <li key={link.label}>
-                  <a className="group inline-flex items-center gap-1 text-silver transition-colors hover:text-fg" href={link.href}>
-                    <span className="link-line">{link.label}</span>
-                    <Icon
-                      className="text-sm opacity-0 transition-all duration-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100"
-                      name="arrow_outward"
-                    />
-                  </a>
+              {[
+                { label: "Privacy Policy", href: "/privacy-policy" },
+                { label: "Terms of Service", href: "/terms-of-service" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <a className="link-line font-display text-lg font-semibold" href={link.href}>{link.label}</a>
                 </li>
               ))}
             </ul>

@@ -32,14 +32,6 @@ export const navItems = [
   { label: "Tech", id: "tech" },
 ];
 
-// TODO(owner): replace "#" with real URLs when available.
-export const footerLinks = [
-  { label: "Privacy Policy", href: "#" },
-  { label: "Terms of Service", href: "#" },
-  { label: "LinkedIn", href: "#" },
-  { label: "GitHub", href: "#" },
-];
-
 /** Home lives at "/" and "/zenvix"; on any other route, anchors point back home. */
 export const sectionHref = (pathname, id) =>
   pathname === "/" || pathname === "/zenvix" ? `#${id}` : `/zenvix#${id}`;
