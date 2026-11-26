@@ -7,6 +7,8 @@ export const metadata = { title: "Privacy Policy", ...canonical("/privacy-policy
 export default function PrivacyPolicyPage() {
   return (
     <LegalPage
+      eyebrow="Privacy"
+      related={{ label: "Terms of Service", href: "/terms-of-service" }}
       title="Privacy Policy"
       intro="This policy explains what information you may share when you visit Zenvix or contact us, and how it is handled."
       sections={[

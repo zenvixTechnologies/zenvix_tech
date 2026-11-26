@@ -7,6 +7,8 @@ export const metadata = { title: "Terms of Service", ...canonical("/terms-of-ser
 export default function TermsOfServicePage() {
   return (
     <LegalPage
+      eyebrow="Terms"
+      related={{ label: "Privacy Policy", href: "/privacy-policy" }}
       title="Terms of Service"
       intro="These terms apply to your use of the Zenvix website. By using the site, you agree to use it lawfully and respectfully."
       sections={[
